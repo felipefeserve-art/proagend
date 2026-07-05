@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+
+<meta charset="UTF-8">
+
+<title>Dashboard</title>
+
+<h1>📊 Menu</Menu></h1>
+
+<div class="atalhos">
+
+  <a href="/agenda-semanal.html" target="_blank" class="atalho">
+    <div class="icone">📅</div>
+    <div>Agenda</div>
+  </a>
+
+  <a href="/cadastro-servico.html" target="_blank" class="atalho">
+    <div class="icone">✂️</div>
+    <div>Serviços</div>
+  </a>
+
+  <a href="/clientes.html" target="_blank" class="atalho">
+    <div class="icone">👥</div>
+    <div>Clientes</div>
+  </a>
+
+  <a href="/Bloqueios.html" target="_blank" class="atalho">
+    <div class="icone">👨‍💼</div>
+    <div>Bloqueio</div>
+  </a>
+
+  <a href="/profissionais.html" target="_blank" class="atalho">
+
+  <div class="icone">👨‍💼</div>
+
+  <div>Profissionais</div>
+
+</a>
+
+</div>
+
+<style>
+
+*{
+  margin:0;
+  padding:0;
+  box-sizing:border-box;
+  font-family:Segoe UI;
+}
+
+body{
+  background:#0f172a;
+  color:white;
+  padding:30px;
+}
+
+.atalhos{
+
+  display:grid;
+
+  grid-template-columns:
+  repeat(auto-fit,minmax(180px,1fr));
+
+  gap:20px;
+
+  margin-bottom:30px;
+
+}
+
+.atalho{
+
+  background:#1e293b;
+
+  color:white;
+
+  text-decoration:none;
+
+  border-radius:20px;
+
+  padding:25px;
+
+  text-align:center;
+
+  transition:.2s;
+
+}
+
+.atalho:hover{
+
+  transform:translateY(-5px);
+
+}
+
+.icone{
+
+  font-size:40px;
+
+  margin-bottom:10px;
+
+}
+
+h1{
+  margin-bottom:25px;
+}
+
+.cards{
+
+  display:grid;
+
+  grid-template-columns:
+  repeat(auto-fit,minmax(250px,1fr));
+
+  gap:20px;
+
+}
+
+.card{
+
+  background:#1e293b;
+
+  padding:25px;
+
+  border-radius:20px;
+
+  box-shadow:
+  0 10px 20px rgba(0,0,0,.25);
+
+}
+
+.titulo{
+
+  color:#94a3b8;
+
+  font-size:14px;
+
+}
+
+.valor{
+
+  margin-top:10px;
+
+  font-size:32px;
+
+  font-weight:bold;
+
+}
+
+</style>
+
+</head>
+
+<body>
+
+<h1>📊 Dashboard</h1>
+
+<div class="cards">
+
+  <div class="card">
+    <div class="titulo">
+      Agendamentos Hoje
+    </div>
+
+    <div
+      id="agendamentos"
+      class="valor">
+
+      0
+
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="titulo">
+      Clientes
+    </div>
+
+    <div
+      id="clientes"
+      class="valor">
+
+      0
+
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="titulo">
+      Serviços
+    </div>
+
+    <div
+      id="servicos"
+      class="valor">
+
+      0
+
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="titulo">
+      Faturamento Hoje
+    </div>
+
+    <div
+      id="faturamento"
+      class="valor">
+
+      R$ 0
+
+    </div>
+  </div>
+
+</div>
+
+<script>
+
+async function carregar(){
+
+  const resposta =
+    await fetch("/dashboard");
+
+  const dados =
+    await resposta.json();
+
+  document
+    .getElementById(
+      "agendamentos"
+    ).innerText =
+      dados.agendamentos;
+
+  document
+    .getElementById(
+      "clientes"
+    ).innerText =
+      dados.clientes;
+
+  document
+    .getElementById(
+      "servicos"
+    ).innerText =
+      dados.servicos;
+
+  document
+    .getElementById(
+      "faturamento"
+    ).innerText =
+      "R$ " +
+      Number(
+        dados.faturamento
+      ).toFixed(2);
+
+}
+
+carregar();
+
+</script>
+
+</body>
+</html>

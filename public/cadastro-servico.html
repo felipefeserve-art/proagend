@@ -1,0 +1,564 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+
+<title>Cadastro de Serviços</title>
+
+<style>
+
+  .container{
+    max-width:1200px;
+    margin:auto;
+}
+
+*{
+  margin:0;
+  padding:0;
+  box-sizing:border-box;
+  font-family:Segoe UI, sans-serif;
+}
+
+body{
+  background:#0f172a;
+  color:white;
+  padding:30px;
+}
+
+h1{
+  margin-bottom:20px;
+}
+
+.formulario{
+
+    background:
+      rgba(30,41,59,.85);
+
+    backdrop-filter:blur(12px);
+
+    border:1px solid rgba(255,255,255,.05);
+
+    padding:25px;
+
+    border-radius:24px;
+
+    box-shadow:
+      0 20px 40px rgba(0,0,0,.25);
+
+    margin-bottom:35px;
+
+}
+
+select{
+
+  width:100%;
+
+  height:45px;
+
+  border:none;
+
+  border-radius:10px;
+
+  padding:10px;
+
+  margin-bottom:10px;
+
+  background:#334155;
+
+  color:white;
+}
+
+input{
+
+  width:100%;
+
+  height:45px;
+
+  border:none;
+
+  border-radius:10px;
+
+  padding:10px;
+
+  margin-bottom:10px;
+
+  background:#334155;
+
+  color:white;
+}
+
+input,
+select{
+
+    width:100%;
+
+    height:50px;
+
+    background:#334155;
+
+    color:white;
+
+    border:none;
+
+    border-radius:14px;
+
+    padding:0 15px;
+
+    margin-bottom:12px;
+
+    font-size:15px;
+
+}
+
+input:focus,
+select:focus{
+
+    outline:none;
+
+    box-shadow:
+      0 0 0 2px #3b82f6;
+
+}
+
+button{
+
+  border:none;
+
+  cursor:pointer;
+
+  border-radius:10px;
+}
+
+.salvar{
+
+    width:100%;
+
+    height:50px;
+
+    border:none;
+
+    border-radius:14px;
+
+    font-size:16px;
+
+    font-weight:600;
+
+    color:white;
+
+    background:
+      linear-gradient(
+        135deg,
+        #2563eb,
+        #3b82f6
+      );
+
+    transition:.2s;
+
+}
+
+.salvar:hover{
+
+    transform:translateY(-2px);
+
+    box-shadow:
+      0 10px 25px rgba(59,130,246,.35);
+
+}
+
+.cards{
+
+  display:grid;
+
+  grid-template-columns:
+  repeat(auto-fill,minmax(280px,1fr));
+
+  gap:20px;
+}
+
+.card{
+
+    background:
+      rgba(30,41,59,.95);
+
+    border-radius:22px;
+
+    padding:25px;
+
+    box-shadow:
+      0 12px 30px rgba(0,0,0,.25);
+
+    transition:.2s;
+
+}
+
+.card:hover{
+
+    transform:
+      translateY(-4px);
+
+}
+
+.icone{
+
+    font-size:52px;
+
+    margin-bottom:15px;
+
+}
+
+.nome{
+
+  font-size:20px;
+
+  margin-top:10px;
+}
+
+.valor{
+
+    color:#4ade80;
+
+    margin-top:10px;
+
+    font-weight:600;
+
+}
+
+.duracao{
+
+    color:#94a3b8;
+
+    margin-top:6px;
+
+}
+
+.acoes{
+
+  display:flex;
+
+  gap:10px;
+
+  margin-top:20px;
+}
+
+.editar{
+
+    flex:1;
+
+    height:42px;
+
+    border:none;
+
+    border-radius:12px;
+
+    background:
+      linear-gradient(
+        135deg,
+        #2563eb,
+        #3b82f6
+      );
+
+    color:white;
+
+}
+
+.excluir{
+
+    flex:1;
+
+    height:42px;
+
+    border:none;
+
+    border-radius:12px;
+
+    background:
+      linear-gradient(
+        135deg,
+        #9c7373,
+        #ef4444
+      );
+
+    color:white;
+
+}
+
+.topo{
+    margin-bottom:30px;
+}
+
+.subtitulo{
+    color:#94a3b8;
+    margin-top:5px;
+}
+
+h1{
+    font-size:32px;
+}
+
+
+
+</style>
+
+</head>
+
+<body>
+
+  
+
+<div class="container">
+
+    <!-- formulário -->
+    <!-- lista -->
+
+</div>
+
+
+
+<div class="topo">
+
+    <div>
+        <h1>✂️ Serviços</h1>
+
+        <div class="subtitulo">
+            Gerencie os serviços disponíveis
+        </div>
+    </div>
+
+</div>
+
+<div class="formulario">
+
+<select id="icone">
+
+  <option value="✂️">✂️ Corte</option>
+
+  <option value="🧔">🧔 Barba</option>
+
+  <option value="💇">💇 Cabelo</option>
+
+  <option value="💅">💅 Manicure</option>
+
+  <option value="🎨">🎨 Coloração</option>
+
+  <option value="🪒">🪒 Barbear</option>
+
+</select>
+
+<input
+  id="nome"
+  placeholder="Nome do serviço">
+
+<input
+  id="valor"
+  placeholder="Valor">
+
+<input
+  id="duracao"
+  placeholder="Duração (minutos)">
+
+<button
+  class="salvar"
+  onclick="salvar()">
+
+Salvar Serviço
+
+</button>
+
+</div>
+
+<div
+  id="lista"
+  class="cards">
+</div>
+
+<script>
+
+let editando = null;
+
+async function salvar(){
+
+  const icone =
+    document.getElementById("icone").value;
+
+  const nome =
+    document.getElementById("nome").value;
+
+  const valor =
+    document.getElementById("valor").value;
+
+  const duracao =
+    document.getElementById("duracao").value;
+
+  if(editando){
+
+    await fetch(`/servicos/${editando}`,{
+
+      method:"PUT",
+
+      headers:{
+        "Content-Type":"application/json"
+      },
+
+      body:JSON.stringify({
+
+        icone,
+        nome,
+        valor,
+        duracao
+
+      })
+
+    });
+
+    editando = null;
+
+  }else{
+
+    await fetch("/servicos",{
+
+      method:"POST",
+
+      headers:{
+        "Content-Type":"application/json"
+      },
+
+      body:JSON.stringify({
+
+        nome,
+        valor,
+        duracao
+
+      })
+
+    });
+
+  }
+
+  limpar();
+
+  carregar();
+
+}
+
+function limpar(){
+
+  document.getElementById("icone").value = "";
+
+  document.getElementById("nome").value = "";
+
+  document.getElementById("valor").value = "";
+
+  document.getElementById("duracao").value = "";
+
+}
+
+async function carregar(){
+
+  const resposta =
+    await fetch("/servicos");
+
+  const servicos =
+    await resposta.json();
+
+  document.getElementById("lista").innerHTML =
+
+  servicos.map(s=>`
+
+  <div class="card">
+
+    <div class="icone">
+
+      ${s.icone || "✂️"}
+
+    </div>
+
+    <div class="nome">
+
+      ${s.nome}
+
+    </div>
+
+    
+
+    <p class="valor">
+    💰 R$ ${s.valor}
+</p>
+
+<p class="duracao">
+    ⏱️ ${s.duracao} minutos
+</p>
+
+    <div class="acoes">
+
+      <button
+        class="editar"
+        onclick="editar(${s.id})">
+
+        Editar
+
+      </button>
+
+      <button
+        class="excluir"
+        onclick="excluir(${s.id})">
+
+        Excluir
+
+      </button>
+
+    </div>
+
+  </div>
+
+  `).join("");
+
+}
+
+async function editar(id){
+
+  const resposta =
+    await fetch(`/servicos/${id}`);
+
+  const servico =
+    await resposta.json();
+
+  editando = id;
+
+  document.getElementById("icone").value =
+    servico.icone || "";
+
+  document.getElementById("nome").value =
+    servico.nome;
+
+  document.getElementById("valor").value =
+    servico.valor;
+
+  document.getElementById("duracao").value =
+    servico.duracao;
+
+}
+
+async function excluir(id){
+
+  const confirmar = confirm(
+    "Deseja excluir este serviço?"
+  );
+
+  if(!confirmar) return;
+
+  await fetch(`/servicos/${id}`,{
+
+    method:"DELETE"
+
+  });
+
+  carregar();
+
+}
+
+carregar();
+
+</script>
+
+</body>
+</html>

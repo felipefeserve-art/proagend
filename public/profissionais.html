@@ -1,0 +1,716 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+
+<meta charset="UTF-8">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Profissionais</title>
+
+<style>
+
+*{
+  box-sizing:border-box;
+}
+
+body{
+  background:
+    linear-gradient(
+      135deg,
+      #eef2ff,
+      #f8fafc
+    );
+
+  color:#0f172a;
+  font-family:'Segoe UI',sans-serif;
+  padding:24px;
+  margin:0;
+}
+
+.container{
+  max-width:1100px;
+  margin:auto;
+}
+
+h1{
+  margin:0 0 5px;
+  color:#0f172a;
+  font-size:34px;
+}
+
+.subtitulo{
+  color:#64748b;
+  margin-bottom:24px;
+}
+
+/* FORMULÁRIO */
+
+.cardFormulario{
+  background:white;
+  border-radius:26px;
+  padding:26px;
+  border:1px solid #e2e8f0;
+  box-shadow:
+    0 20px 50px rgba(15,23,42,.10);
+}
+
+input{
+  width:100%;
+  height:48px;
+  margin-bottom:12px;
+  border:1px solid #cbd5e1;
+  border-radius:14px;
+  padding:0 15px;
+  background:#f8fafc;
+  color:#0f172a;
+  box-sizing:border-box;
+  font-size:15px;
+  transition:.2s;
+}
+
+input::placeholder{
+  color:#94a3b8;
+}
+
+input:focus{
+  outline:none;
+  border-color:#2563eb;
+  box-shadow:
+    0 0 0 3px rgba(37,99,235,.15);
+  background:white;
+}
+
+.linha{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:12px;
+}
+
+label{
+  display:block;
+  margin-bottom:6px;
+  color:#475569;
+  font-size:14px;
+  font-weight:600;
+}
+
+/* FOLGAS */
+
+.folgas{
+  display:flex;
+  flex-wrap:wrap;
+  gap:10px;
+  margin:16px 0;
+}
+
+.folgas label{
+  background:#f1f5f9;
+  color:#334155;
+  border:1px solid #e2e8f0;
+  padding:10px 14px;
+  border-radius:999px;
+  cursor:pointer;
+  user-select:none;
+  transition:.2s;
+}
+
+.folgas label:hover{
+  background:#dbeafe;
+  border-color:#93c5fd;
+  color:#1d4ed8;
+}
+
+.folgas input{
+  width:auto;
+  height:auto;
+  margin-right:6px;
+}
+
+/* BOTÕES */
+
+button{
+  border:none;
+  border-radius:14px;
+  padding:14px 20px;
+  cursor:pointer;
+  font-weight:700;
+  transition:.2s;
+}
+
+.botaoSalvar{
+  width:100%;
+  background:
+    linear-gradient(
+      90deg,
+      #2563eb,
+      #3b82f6
+    );
+  color:white;
+  box-shadow:
+    0 12px 25px rgba(37,99,235,.25);
+}
+
+.botaoSalvar:hover{
+  transform:translateY(-2px);
+  box-shadow:
+    0 16px 32px rgba(37,99,235,.35);
+}
+
+hr{
+  border:none;
+  height:1px;
+  background:#e2e8f0;
+  margin:30px 0;
+}
+
+/* LISTA */
+
+#lista{
+  margin-top:30px;
+  display:grid;
+  gap:16px;
+}
+
+.card{
+  background:white;
+  border-radius:24px;
+  padding:20px;
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  border:1px solid #e2e8f0;
+  box-shadow:
+    0 12px 30px rgba(15,23,42,.08);
+  transition:.2s;
+}
+
+.card:hover{
+  transform:translateY(-3px);
+  box-shadow:
+    0 18px 40px rgba(15,23,42,.12);
+}
+
+.info h3{
+  margin:0 0 8px;
+  color:#0f172a;
+  font-size:22px;
+}
+
+.info p{
+  margin:5px 0;
+  color:#64748b;
+}
+
+.badge{
+  display:inline-block;
+  background:#dcfce7;
+  color:#15803d;
+  padding:6px 12px;
+  border-radius:999px;
+  font-size:12px;
+  font-weight:700;
+  margin-top:10px;
+}
+
+/* AÇÕES */
+
+.acoes{
+  display:flex;
+  gap:10px;
+  flex-wrap:wrap;
+}
+
+.acoes button{
+  min-width:115px;
+}
+
+/* EDITAR */
+
+.btnEditar{
+  background:#dbeafe;
+  color:#1d4ed8;
+}
+
+.btnEditar:hover{
+  background:#2563eb;
+  color:white;
+  transform:translateY(-2px);
+}
+
+/* COPIAR LINK */
+
+.btnLink{
+  background:#ccfbf1;
+  color:#0f766e;
+}
+
+.btnLink:hover{
+  background:#0f766e;
+  color:white;
+  transform:translateY(-2px);
+}
+
+/* EXCLUIR */
+
+.btnExcluir{
+  background:#fee2e2;
+  color:#b91c1c;
+}
+
+.btnExcluir:hover{
+  background:#dc2626;
+  color:white;
+  transform:translateY(-2px);
+}
+
+/* MOBILE */
+
+@media(max-width:700px){
+
+  body{
+    padding:12px;
+  }
+
+  .container{
+    max-width:100%;
+  }
+
+  h1{
+    font-size:26px;
+  }
+
+  .subtitulo{
+    font-size:13px;
+    margin-bottom:16px;
+  }
+
+  .cardFormulario{
+    padding:16px;
+    border-radius:20px;
+  }
+
+  input{
+    height:44px;
+    margin-bottom:8px;
+    font-size:14px;
+  }
+
+  .linha{
+    grid-template-columns:1fr 1fr;
+    gap:8px;
+  }
+
+  label{
+    font-size:13px;
+  }
+
+  .folgas{
+    gap:7px;
+    margin:12px 0;
+  }
+
+  .folgas label{
+    padding:8px 10px;
+    font-size:13px;
+  }
+
+  .card{
+    flex-direction:column;
+    align-items:flex-start;
+    gap:14px;
+    padding:16px;
+    border-radius:20px;
+  }
+
+  .info h3{
+    font-size:20px;
+  }
+
+  .info p{
+    font-size:14px;
+  }
+
+  .acoes{
+    width:100%;
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:8px;
+  }
+
+  .acoes button{
+    min-width:auto;
+    width:100%;
+    padding:12px 10px;
+    font-size:13px;
+  }
+
+  .btnLink{
+    grid-column:1 / -1;
+  }
+
+}
+
+@media(max-width:380px){
+
+  .linha{
+    grid-template-columns:1fr;
+  }
+
+  .acoes{
+    grid-template-columns:1fr;
+  }
+
+  .btnLink{
+    grid-column:auto;
+  }
+
+}
+
+</style>
+
+</head>
+
+<body>
+
+<div class="container">
+
+  <h1>👨‍💼 Profissionais</h1>
+
+  <p class="subtitulo">
+    Gerencie expedientes, folgas e informações da equipe
+  </p>
+
+  <div class="cardFormulario">
+
+<input
+id="nome"
+placeholder="Nome">
+
+<input
+id="telefone"
+placeholder="Telefone">
+
+<input
+id="especialidade"
+placeholder="Especialidade">
+
+<div class="linha">
+
+  <div>
+
+    <label>Início do expediente</label>
+
+    <input
+      type="time"
+      id="hora_inicio"
+      value="08:00">
+
+  </div>
+
+  <div>
+
+    <label>Fim do expediente</label>
+
+    <input
+      type="time"
+      id="hora_fim"
+      value="18:00">
+
+  </div>
+
+</div>
+
+<h3>📅 Folgas Semanais</h3>
+
+<div class="folgas">
+
+  <label><input type="checkbox" id="folga_domingo">Dom</label>
+
+  <label><input type="checkbox" id="folga_segunda">Seg</label>
+
+  <label><input type="checkbox" id="folga_terca">Ter</label>
+
+  <label><input type="checkbox" id="folga_quarta">Qua</label>
+
+  <label><input type="checkbox" id="folga_quinta">Qui</label>
+
+  <label><input type="checkbox" id="folga_sexta">Sex</label>
+
+  <label><input type="checkbox" id="folga_sabado">Sáb</label>
+
+</div>
+
+<button
+  class="botaoSalvar"
+  onclick="salvar()">
+
+  💾 Salvar Profissional
+
+</button>
+
+<hr>
+
+<div id="lista"></div>
+
+</body>
+</html>
+
+<script>
+
+  let profissionalEditando = null;
+
+async function salvar(){
+
+  const nome =
+    document.getElementById("nome").value;
+
+  const telefone =
+    document.getElementById("telefone").value;
+
+  const especialidade =
+    document.getElementById("especialidade").value;
+
+  const hora_inicio =
+    document.getElementById("hora_inicio").value;
+
+  const hora_fim =
+    document.getElementById("hora_fim").value;
+
+  const url =
+    profissionalEditando
+    ? `/profissionais/${profissionalEditando}`
+    : "/profissionais";
+
+  const metodo =
+    profissionalEditando
+    ? "PUT"
+    : "POST";
+
+    const folga_domingo =
+document.getElementById("folga_domingo").checked ? 1 : 0;
+
+const folga_segunda =
+document.getElementById("folga_segunda").checked ? 1 : 0;
+
+const folga_terca =
+document.getElementById("folga_terca").checked ? 1 : 0;
+
+const folga_quarta =
+document.getElementById("folga_quarta").checked ? 1 : 0;
+
+const folga_quinta =
+document.getElementById("folga_quinta").checked ? 1 : 0;
+
+const folga_sexta =
+document.getElementById("folga_sexta").checked ? 1 : 0;
+
+const folga_sabado =
+document.getElementById("folga_sabado").checked ? 1 : 0;
+
+console.log("ENVIANDO:", {
+
+  nome,
+  telefone,
+  especialidade,
+  hora_inicio,
+  hora_fim,
+
+  folga_domingo,
+  folga_segunda,
+  folga_terca,
+  folga_quarta,
+  folga_quinta,
+  folga_sexta,
+  folga_sabado
+
+});
+
+  await fetch(url,{
+
+    method: metodo,
+
+    headers:{
+      "Content-Type":"application/json"
+    },
+
+    body: JSON.stringify({
+
+  nome,
+  telefone,
+  especialidade,
+  hora_inicio,
+  hora_fim,
+
+  folga_domingo,
+  folga_segunda,
+  folga_terca,
+  folga_quarta,
+  folga_quinta,
+  folga_sexta,
+  folga_sabado
+
+})
+
+  });
+
+  profissionalEditando = null;
+
+  document.getElementById("nome").value = "";
+  document.getElementById("telefone").value = "";
+  document.getElementById("especialidade").value = "";
+  document.getElementById("hora_inicio").value = "08:00";
+  document.getElementById("hora_fim").value = "18:00";
+
+  carregar();
+
+}
+
+async function carregar(){
+
+  const resposta =
+    await fetch("/profissionais");
+
+  const profissionais =
+    await resposta.json();
+
+  document.getElementById("lista").innerHTML =
+profissionais.map(p => `
+
+<div class="card">
+
+  <div class="info">
+
+    <h3>👨‍💼 ${p.nome}</h3>
+
+    <p>${p.especialidade || "-"}</p>
+
+    <p>📞 ${p.telefone || "-"}</p>
+
+    <p>
+      🕒 ${p.hora_inicio}
+      às
+      ${p.hora_fim}
+    </p>
+
+    <span class="badge">
+      Ativo
+    </span>
+
+  </div>
+
+  <div class="acoes">
+
+    <button
+      class="btnEditar"
+      onclick="editar(${p.id})">
+
+      ✏️ Editar
+
+    </button>
+
+    <button
+      class="btnLink"
+      onclick="copiarLink(${p.id})">
+
+      🔗 Link
+
+    </button>
+
+    <button
+      class="btnExcluir"
+      onclick="excluir(${p.id})">
+
+      🗑️ Excluir
+
+    </button>
+
+  </div>
+
+</div>
+
+`).join("");
+
+}
+
+carregar();
+
+async function editar(id){
+
+  const resposta =
+    await fetch(`/profissionais/${id}`);
+
+  const profissional =
+    await resposta.json();
+
+  document.getElementById("nome")
+    .value = profissional.nome || "";
+
+  document.getElementById("telefone")
+    .value = profissional.telefone || "";
+
+  document.getElementById("especialidade")
+    .value = profissional.especialidade || "";
+
+  document.getElementById("hora_inicio")
+    .value = profissional.hora_inicio || "08:00";
+
+  document.getElementById("hora_fim")
+    .value = profissional.hora_fim || "18:00";
+
+  document.getElementById("folga_domingo").checked =
+profissional.folga_domingo == 1;
+
+document.getElementById("folga_segunda").checked =
+profissional.folga_segunda == 1;
+
+document.getElementById("folga_terca").checked =
+profissional.folga_terca == 1;
+
+document.getElementById("folga_quarta").checked =
+profissional.folga_quarta == 1;
+
+document.getElementById("folga_quinta").checked =
+profissional.folga_quinta == 1;
+
+document.getElementById("folga_sexta").checked =
+profissional.folga_sexta == 1;
+
+document.getElementById("folga_sabado").checked =
+profissional.folga_sabado == 1;  
+
+  profissionalEditando = id;
+
+}
+
+async function excluir(id){
+
+  const confirmar = confirm(
+    "Deseja excluir este profissional?"
+  );
+
+  if(!confirmar) return;
+
+  await fetch(`/profissionais/${id}`,{
+    method:"DELETE"
+  });
+
+  carregar();
+
+}
+
+async function copiarLink(id){
+
+  const link =
+    `${location.origin}/agendar.html?profissional=${id}`;
+
+  await navigator.clipboard.writeText(link);
+
+  alert(
+    "Link copiado!\n\n" + link
+  );
+
+}
+
+</script>
+

@@ -1,0 +1,128 @@
+<select id="profissional"></select>
+
+<div id="listaServicos"></div>
+
+<button onclick="salvar()">
+  Salvar
+</button>
+
+<script>
+    async function carregarProfissionais(){
+
+  const resposta =
+    await fetch("/profissionais");
+
+  const profissionais =
+    await resposta.json();
+
+  document.getElementById(
+    "profissional"
+  ).innerHTML =
+
+    profissionais.map(p=>`
+
+      <option value="${p.id}">
+        ${p.nome}
+      </option>
+
+    `).join("");
+
+  carregarServicos();
+
+}
+
+async function carregarServicos(){
+
+  const profissionalId =
+    document.getElementById(
+      "profissional"
+    ).value;
+
+  const resposta =
+    await fetch(
+      `/profissionais/${profissionalId}/servicos-admin`
+    );
+
+  const servicos =
+    await resposta.json();
+
+  document.getElementById(
+    "listaServicos"
+  ).innerHTML =
+
+    servicos.map(s=>`
+
+      <label
+        style="
+          display:block;
+          margin:10px;
+        ">
+
+        <input
+          type="checkbox"
+          value="${s.id}"
+          ${s.vinculado ? "checked" : ""}>
+
+        ${s.nome}
+
+      </label>
+
+    `).join("");
+
+}
+
+async function salvar(){
+
+  const profissionalId =
+    document.getElementById(
+      "profissional"
+    ).value;
+
+  const servicos =
+
+    [...document.querySelectorAll(
+      "#listaServicos input:checked"
+    )]
+
+    .map(c=>c.value);
+
+  await fetch(
+
+    `/profissionais/${profissionalId}/servicos`,
+
+    {
+
+      method:"POST",
+
+      headers:{
+        "Content-Type":"application/json"
+      },
+
+      body:JSON.stringify({
+        servicos
+      })
+
+    }
+
+  );
+
+  alert(
+    "Serviços atualizados!"
+  );
+
+}
+
+document
+  .getElementById("profissional")
+  .addEventListener(
+    "change",
+    carregarServicos
+  );
+
+(async ()=>{
+
+  await carregarProfissionais();
+
+})();
+
+</script>

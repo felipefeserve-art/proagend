@@ -1,0 +1,495 @@
+<body>
+
+<div class="container">
+
+  <div class="topo">
+
+    <h1>🗓️ Fechar Agenda</h1>
+
+    <div class="subtitulo">
+      Gerencie férias, folgas e indisponibilidades
+    </div>
+
+  </div>
+
+
+
+<div class="card">
+
+  <div class="form-grid">
+
+    <div class="form-grid-full">
+
+      <label>Profissional</label>
+
+      <select id="profissional"></select>
+
+    </div>
+
+    <div>
+
+      <label>Data Inicial</label>
+
+      <input type="date" id="data_inicio">
+
+    </div>
+
+    <div>
+
+      <label>Data Final</label>
+
+      <input type="date" id="data_fim">
+
+    </div>
+
+    <div class="form-grid-full">
+
+      <label>Motivo</label>
+
+      <input
+        id="motivo"
+        placeholder="Ex: Férias, Curso, Licença médica...">
+
+    </div>
+
+  </div>
+
+  <button
+    class="salvar"
+    onclick="salvarBloqueio()">
+
+    💾 Salvar Bloqueio
+
+  </button>
+
+</div>
+
+<h2 class="listaTitulo">
+
+  📋 Bloqueios cadastrados
+
+</h2>
+
+<div id="lista"></div>
+
+</div>
+
+<div id="lista"></div>
+
+</body>
+
+<style>
+
+*{
+  margin:0;
+  padding:0;
+  box-sizing:border-box;
+  font-family:'Segoe UI',sans-serif;
+}
+
+body{
+
+  background:
+    linear-gradient(
+      135deg,
+      #0f172a,
+      #1e293b
+    );
+
+  color:#e2e8f0;
+
+  padding:30px;
+
+}
+
+.container{
+
+  max-width:900px;
+
+  margin:auto;
+
+}
+
+.topo{
+
+  margin-bottom:30px;
+
+}
+
+h1{
+
+  color:white;
+
+  font-size:32px;
+
+}
+
+.subtitulo{
+
+  color:#94a3b8;
+
+  margin-top:6px;
+
+}
+
+.card{
+
+  background:
+    rgba(30,41,59,.90);
+
+  backdrop-filter:blur(12px);
+
+  border-radius:24px;
+
+  padding:25px;
+
+  box-shadow:
+    0 20px 40px rgba(0,0,0,.25);
+
+  margin-bottom:30px;
+
+}
+
+.form-grid{
+
+  display:grid;
+
+  grid-template-columns:1fr 1fr;
+
+  gap:15px;
+
+}
+
+.form-grid-full{
+
+  grid-column:1/-1;
+
+}
+
+label{
+
+  display:block;
+
+  margin-bottom:8px;
+
+  color:#cbd5e1;
+
+  font-size:14px;
+
+}
+
+input,
+select{
+
+  width:100%;
+
+  height:50px;
+
+  border:none;
+
+  border-radius:14px;
+
+  background:#334155;
+
+  color:white;
+
+  padding:0 15px;
+
+  font-size:15px;
+
+}
+
+input:focus,
+select:focus{
+
+  outline:none;
+
+  box-shadow:
+    0 0 0 2px #3b82f6;
+
+}
+
+.salvar{
+
+  width:100%;
+
+  height:52px;
+
+  border:none;
+
+  border-radius:14px;
+
+  margin-top:10px;
+
+  cursor:pointer;
+
+  color:white;
+
+  font-size:16px;
+
+  font-weight:600;
+
+  background:
+    linear-gradient(
+      135deg,
+      #2563eb,
+      #3b82f6
+    );
+
+  transition:.2s;
+
+}
+
+.salvar:hover{
+
+  transform:translateY(-2px);
+
+  box-shadow:
+    0 12px 25px rgba(37,99,235,.35);
+
+}
+
+.listaTitulo{
+
+  color:white;
+
+  font-size:24px;
+
+  margin-bottom:20px;
+
+}
+
+.bloqueio{
+
+  background:
+    rgba(30,41,59,.95);
+
+  border-radius:18px;
+
+  padding:20px;
+
+  margin-bottom:15px;
+
+  box-shadow:
+    0 10px 25px rgba(0,0,0,.20);
+
+  display:flex;
+
+  justify-content:space-between;
+
+  align-items:center;
+
+  gap:20px;
+
+}
+
+.info h3{
+
+  color:white;
+
+  margin-bottom:8px;
+
+}
+
+.info p{
+
+  color:#94a3b8;
+
+}
+
+.excluir{
+
+  border:none;
+
+  cursor:pointer;
+
+  border-radius:12px;
+
+  padding:12px 18px;
+
+  color:white;
+
+  font-weight:600;
+
+  background:
+    linear-gradient(
+      135deg,
+      #dc2626,
+      #ef4444
+    );
+
+  transition:.2s;
+
+}
+
+.excluir:hover{
+
+  transform:translateY(-2px);
+
+}
+
+@media(max-width:700px){
+
+  .form-grid{
+
+    grid-template-columns:1fr;
+
+  }
+
+  .bloqueio{
+
+    flex-direction:column;
+
+    align-items:flex-start;
+
+  }
+
+}
+
+</style>
+
+<script>
+
+
+
+async function carregarProfissionais(){
+
+  const resposta =
+    await fetch("/profissionais");
+
+  const profissionais =
+    await resposta.json();
+
+  document.getElementById(
+    "profissional"
+  ).innerHTML =
+
+    profissionais.map(p=>`
+
+      <option value="${p.id}">
+        ${p.nome}
+      </option>
+
+    `).join("");
+
+}
+
+async function salvarBloqueio(){
+
+  const profissional_id =
+    document.getElementById("profissional").value;
+
+  const data_inicio =
+    document.getElementById("data_inicio").value;
+
+  const data_fim =
+    document.getElementById("data_fim").value;
+
+  const motivo =
+    document.getElementById("motivo").value;
+
+  await fetch("/bloqueios",{
+
+    method:"POST",
+
+    headers:{
+      "Content-Type":"application/json"
+    },
+
+    body:JSON.stringify({
+
+      profissional_id,
+      data_inicio,
+      data_fim,
+      motivo
+
+    })
+
+  });
+
+  alert("Bloqueio cadastrado!");
+
+  carregarBloqueios();
+
+}
+
+async function carregarBloqueios(){
+
+  const profissional =
+    document.getElementById("profissional").value;
+
+  const resposta =
+    await fetch(
+      `/bloqueios/${profissional}`
+    );
+
+  const bloqueios =
+    await resposta.json();
+
+  document.getElementById("lista").innerHTML =
+
+  bloqueios.map(b=>`
+
+    <div class="bloqueio">
+
+      <div class="info">
+
+        <h3>
+
+          🏖️ ${b.motivo}
+
+        </h3>
+
+        <p>
+
+          ${b.data_inicio}
+          até
+          ${b.data_fim}
+
+        </p>
+
+      </div>
+
+      <button
+        class="excluir"
+        onclick="excluir(${b.id})">
+
+        Excluir
+
+      </button>
+
+    </div>
+
+  `).join("");
+
+}
+
+async function excluir(id){
+
+  await fetch(
+    `/bloqueios/${id}`,
+    {
+      method:"DELETE"
+    }
+  );
+
+  carregarBloqueios();
+
+}
+
+document
+.getElementById("profissional")
+.addEventListener(
+  "change",
+  carregarBloqueios
+);
+
+(async ()=>{
+
+  await carregarProfissionais();
+
+  carregarBloqueios();
+
+})();
+
+</script>

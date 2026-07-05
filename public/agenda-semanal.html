@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Agenda Semanal</title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+<link rel="stylesheet" href="/css/agenda-semanal.css?v=5">
+
+
+</head>
+
+<body>
+
+<div class="topo">
+
+  <div>
+    <h1>📅 Agenda Semanal</h1>
+    <div>Visualize os atendimentos por profissional</div>
+  </div>
+
+  <div class="filtros">
+
+    <select id="profissional"></select>
+
+    <input type="date" id="dataBase">
+
+    <button onclick="carregarSemana()">
+      Buscar
+    </button>
+
+  </div>
+
+</div>
+
+<div id="agendaSemanal"></div>
+
+<script src="/js/dashboard.js"></script>
+<script src="/js/painel.js"></script>
+<script src="/js/agendamento-semanal.js"></script>
+<script src="/js/agenda-semanal.js"></script>
+
+
+
+<div id="modalNovoSemana" class="modalNovoSemana">
+
+  <div class="caixaNovoSemana">
+
+    <h2>Novo Agendamento</h2>
+
+    <input id="novoCliente" placeholder="Cliente">
+
+    <input id="novoTelefone" placeholder="Telefone">
+
+    <select id="novoServico" onchange="atualizarValorNovo()"></select>
+
+    <input id="novoValor" readonly>
+
+    <div class="infoHorarioNovo" id="infoHorarioNovo"></div>
+
+    <button onclick="salvarNovoSemana()">
+      Salvar Agendamento
+    </button>
+
+    <button class="btnFecharNovo" onclick="fecharNovoSemana()">
+      Cancelar
+    </button>
+
+  </div>
+
+</div>
+
+'<div id="overlayPainel" class="overlayPainel" onclick="fecharPainel()"></div>
+
+<div id="painelDetalhes" class="painelDetalhes">
+
+  <button
+    class="fecharPainel"
+    onclick="fecharPainel()">
+    ×
+  </button>
+
+  <div id="conteudoPainel"></div>
+
+</div>
+
+
+
+</body>
+</html>

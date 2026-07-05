@@ -1,0 +1,492 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Meu Agendamento</title>
+
+<style>
+*{
+  box-sizing:border-box;
+}
+
+body{
+  margin:0;
+  min-height:100vh;
+  font-family:"Segoe UI",sans-serif;
+  background:linear-gradient(135deg,#f8fafc,#e8f0fe);
+  color:#111827;
+  padding:18px;
+}
+
+.container{
+  max-width:620px;
+  margin:auto;
+}
+
+.card{
+  background:white;
+  border:1px solid #e5e7eb;
+  border-radius:28px;
+  padding:26px;
+  box-shadow:0 20px 55px rgba(15,23,42,.10);
+}
+
+.topo{
+  text-align:center;
+  margin-bottom:22px;
+}
+
+.badge{
+  display:inline-block;
+  background:#111827;
+  color:white;
+  padding:6px 13px;
+  border-radius:999px;
+  font-size:12px;
+  font-weight:800;
+  letter-spacing:1px;
+  margin-bottom:10px;
+}
+
+h1{
+  margin:0;
+  font-size:30px;
+  letter-spacing:-1px;
+}
+
+.subtitulo{
+  color:#64748b;
+  font-size:14px;
+  margin-top:8px;
+}
+
+input{
+  width:100%;
+  height:50px;
+  border:1px solid #dbe4f0;
+  border-radius:16px;
+  padding:0 15px;
+  font-size:14px;
+  outline:none;
+}
+
+input:focus{
+  border-color:#1a73e8;
+  box-shadow:0 0 0 4px rgba(26,115,232,.10);
+}
+
+button{
+  width:100%;
+  height:50px;
+  margin-top:12px;
+  border:none;
+  border-radius:16px;
+  background:linear-gradient(135deg,#1a73e8,#3b82f6);
+  color:white;
+  font-size:15px;
+  font-weight:800;
+  cursor:pointer;
+}
+
+.resultado{
+  margin-top:18px;
+  display:grid;
+  gap:12px;
+}
+
+.agendamentoCard{
+  background:#f8fafc;
+  border:1px solid #e5e7eb;
+  border-radius:18px;
+  padding:16px;
+}
+
+.agendamentoCard h3{
+  margin:0 0 10px;
+  font-size:18px;
+}
+
+.linha{
+  color:#334155;
+  font-size:14px;
+  margin:7px 0;
+}
+
+.status{
+  display:inline-block;
+  margin-top:10px;
+  padding:6px 10px;
+  border-radius:999px;
+  background:#dcfce7;
+  color:#15803d;
+  font-size:12px;
+  font-weight:800;
+}
+
+.vazio{
+  text-align:center;
+  background:#f8fafc;
+  border:1px dashed #cbd5e1;
+  border-radius:18px;
+  padding:20px;
+  color:#64748b;
+}
+
+.voltar{
+  background:#f1f5f9;
+  color:#334155;
+}
+
+.secaoResultado{
+  margin-top:18px;
+}
+
+.secaoResultado h2{
+  font-size:18px;
+  margin:0 0 10px;
+  color:#111827;
+}
+
+.cardTopoAgendamento{
+  display:flex;
+  justify-content:space-between;
+  align-items:flex-start;
+  gap:10px;
+  margin-bottom:10px;
+}
+
+.cardTopoAgendamento h3{
+  margin:0;
+}
+
+.agendamentoCard.futuro{
+  border-left:5px solid #1a73e8;
+}
+
+.agendamentoCard.passado{
+  opacity:.82;
+  border-left:5px solid #94a3b8;
+}
+
+.statusFuturo{
+  background:#e8f0fe;
+  color:#1a73e8;
+}
+
+.statusPassado{
+  background:#f1f5f9;
+  color:#64748b;
+}
+
+.estadoHorario{
+  grid-column:1 / -1;
+  text-align:center;
+  padding:20px;
+  background:white;
+  border:1px dashed #cbd5e1;
+  border-radius:18px;
+  color:#64748b;
+}
+
+.estadoHorario strong{
+  display:block;
+  color:#111827;
+  font-size:15px;
+  margin-bottom:5px;
+}
+
+.estadoHorario span{
+  font-size:13px;
+}
+
+@media(max-width:600px){
+  body{
+    padding:10px;
+  }
+
+  .card{
+    padding:18px;
+    border-radius:22px;
+  }
+
+  h1{
+    font-size:25px;
+  }
+}
+</style>
+</head>
+
+<body>
+
+<div class="container">
+
+  <div class="card">
+
+    <div class="topo">
+
+      <div class="badge">
+        PRO AGEND
+      </div>
+
+      <h1>
+        Meu Agendamento
+      </h1>
+
+      <p class="subtitulo">
+        Consulte seus horários pelo telefone informado no agendamento
+      </p>
+
+    </div>
+
+    <input
+      id="telefone"
+      placeholder="Digite seu telefone">
+
+    <button onclick="buscarAgendamentos()">
+      🔍 Buscar Agendamento
+    </button>
+
+    <button
+      class="voltar"
+      onclick="location.href='/agendar.html'">
+      Voltar para Agendar
+    </button>
+
+    <div id="resultado" class="resultado"></div>
+
+  </div>
+
+</div>
+
+<script>
+
+function formatarTelefone(valor){
+
+  valor =
+    valor.replace(/\D/g,"");
+
+  if(valor.length > 11){
+    valor = valor.slice(0,11);
+  }
+
+  if(valor.length <= 10){
+    return valor.replace(
+      /(\d{2})(\d{4})(\d{0,4})/,
+      "($1) $2-$3"
+    );
+  }
+
+  return valor.replace(
+    /(\d{2})(\d{5})(\d{0,4})/,
+    "($1) $2-$3"
+  );
+
+}
+
+function formatarDataBR(data){
+
+  if(!data) return "-";
+
+  const partes =
+    data.split("-");
+
+  return partes[2] + "/" +
+         partes[1] + "/" +
+         partes[0];
+
+}
+
+document
+  .getElementById("telefone")
+  .addEventListener("input", e=>{
+
+    e.target.value =
+      formatarTelefone(e.target.value);
+
+  });
+
+async function buscarAgendamentos(){
+
+  const telefone =
+    document.getElementById("telefone").value.trim();
+
+  if(!telefone){
+    alert("Informe seu telefone.");
+    return;
+  }
+
+  const resposta =
+    await fetch(
+      "/meus-agendamentos?telefone=" +
+      encodeURIComponent(telefone)
+    );
+
+  const agendamentos =
+    await resposta.json();
+
+  const resultado =
+    document.getElementById("resultado");
+
+  if(!resposta.ok){
+
+    resultado.innerHTML =
+      `<div class="vazio">
+        Não foi possível consultar seus agendamentos.
+      </div>`;
+
+    return;
+
+  }
+
+  if(!agendamentos.length){
+
+    resultado.innerHTML =
+      `<div class="vazio">
+        Nenhum agendamento encontrado para este telefone.
+      </div>`;
+
+    return;
+
+  }
+
+  const agora =
+    new Date();
+
+  const proximos =
+    agendamentos.filter(a=>{
+
+      const dataHora =
+        new Date(`${a.data}T${a.hora}`);
+
+      return dataHora >= agora;
+
+    });
+
+  const historico =
+    agendamentos.filter(a=>{
+
+      const dataHora =
+        new Date(`${a.data}T${a.hora}`);
+
+      return dataHora < agora;
+
+    });
+
+  resultado.innerHTML = `
+
+    <div class="secaoResultado">
+
+      <h2>📅 Próximos Agendamentos</h2>
+
+      ${
+        proximos.length
+        ? proximos
+          .sort((a,b)=>
+            new Date(`${a.data}T${a.hora}`) -
+            new Date(`${b.data}T${b.hora}`)
+          )
+          .map(cardAgendamento)
+          .join("")
+        : `<div class="vazio">
+            Nenhum próximo agendamento.
+          </div>`
+      }
+
+    </div>
+
+    <div class="secaoResultado">
+
+      <h2>📚 Histórico</h2>
+
+      ${
+        historico.length
+        ? historico
+          .sort((a,b)=>
+            new Date(`${b.data}T${b.hora}`) -
+            new Date(`${a.data}T${a.hora}`)
+          )
+          .map(cardAgendamento)
+          .join("")
+        : `<div class="vazio">
+            Nenhum histórico encontrado.
+          </div>`
+      }
+
+    </div>
+
+  `;
+
+
+}
+
+function cardAgendamento(a){
+
+  const dataHora =
+    new Date(`${a.data}T${a.hora}`);
+
+  const agora =
+    new Date();
+
+  const futuro =
+    dataHora >= agora;
+
+  return `
+
+    <div class="agendamentoCard ${futuro ? "futuro" : "passado"}">
+
+      <div class="cardTopoAgendamento">
+
+        <h3>
+          ${a.servico_nome || "Serviço"}
+        </h3>
+
+        <span class="status ${futuro ? "statusFuturo" : "statusPassado"}">
+          ${futuro ? "Agendado" : "Realizado"}
+        </span>
+
+      </div>
+
+      <div class="linha">
+        📅 Data:
+        <strong>${formatarDataBR(a.data)}</strong>
+      </div>
+
+      <div class="linha">
+        ⏰ Horário:
+        <strong>${a.hora}</strong>
+      </div>
+
+      <div class="linha">
+        👤 Profissional:
+        <strong>${a.profissional_nome || "-"}</strong>
+      </div>
+
+      <div class="linha">
+        💰 Valor:
+        <strong>${formatarMoeda(a.servico_valor || 0)}</strong>
+      </div>
+
+    </div>
+
+  `;
+
+}
+
+function formatarMoeda(valor){
+
+  return Number(valor).toLocaleString(
+    "pt-BR",
+    {
+      style:"currency",
+      currency:"BRL"
+    }
+  );
+
+}
+
+</script>
+
+</body>
+</html>

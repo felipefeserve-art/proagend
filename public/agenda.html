@@ -1,0 +1,1365 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@600;700&display=swap" rel="stylesheet">
+
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@700;800&display=swap" rel="stylesheet">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Agenda</title>
+
+<style>
+
+*{
+  box-sizing:border-box;
+}
+
+body{
+  background:#f1e7b6;
+  color:#1f2937;
+  font-family:'Segoe UI',sans-serif;
+  margin:0;
+  padding:22px;
+}
+
+.container{
+  width:100%;
+  max-width:none;
+  margin:auto;
+}
+
+/* TOPO */
+
+.topo{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  flex-wrap:wrap;
+  gap:15px;
+  margin-bottom:20px;
+  background:white;
+  padding:18px;
+  border-radius:18px;
+  border:1px solid #e5e7eb;
+  box-shadow:0 4px 18px rgba(224, 138, 10, 0.06);
+}
+
+h1{
+
+  font-family:'Montserrat',sans-serif;
+
+  font-size:34px;
+
+  font-weight:800;
+
+  color:#111827;
+
+  letter-spacing:-1px;
+
+}
+
+.subtitulo{
+
+  font-family:'Poppins',sans-serif;
+
+  font-size:14px;
+
+  color:#64748b;
+
+}
+
+/* DATA */
+
+input[type=date]{
+  height:46px;
+  border:1px solid #d1d5db;
+  border-radius:12px;
+  padding:0 15px;
+  background:white;
+  color:#111827;
+  font-size:15px;
+}
+
+input[type=date]:focus{
+  outline:none;
+  border-color:#1a73e8;
+  box-shadow:0 0 0 3px rgba(26,115,232,.15);
+}
+
+/* AGENDA */
+
+.grade{
+  width:100%;
+  overflow:auto;
+  margin-top:20px;
+  background:white;
+  border-radius:18px;
+  border:1px solid #e5e7eb;
+  box-shadow:0 4px 20px rgba(0,0,0,.06);
+  padding:10px;
+}
+
+.tabelaAgenda{
+ 
+ 
+  border-spacing:0;
+  border-collapse:separate;
+  table-layout:fixed;
+}
+
+.tabelaAgenda th{
+  position:sticky;
+  top:0;
+  z-index:10;
+  background:#ffffff;
+  color:#374151;
+  padding:14px;
+  font-size:14px;
+  text-align:center;
+  vertical-align:top;
+  padding:5px;
+   border-bottom:1px solid #f1f5f9;
+}
+
+.tabelaAgenda td{
+  text-align:center;
+  vertical-align:top;
+  padding:8px;
+  border-bottom:1px solid #f1f5f9;
+}
+
+/* COLUNA HORÁRIO FIXA */
+
+.colunaHora{
+
+  position:sticky;
+  left:0;
+  z-index:20;
+
+  background:#f8fafc;
+
+  width:80px;
+  min-width:80px;
+  max-width:80px;
+
+  font-weight:700;
+
+  color:#475569;
+
+  text-align:center;
+
+  white-space:nowrap;
+
+}
+
+.tabelaAgenda th:first-child{
+  position:sticky;
+  left:0;
+  z-index:30;
+  background:#ffffff;
+  color:#6b7280;
+  border-right:1px solid #e5e7eb;
+   width:80px;
+  min-width:80px;
+  max-width:80px;
+}
+
+/* BOTÕES */
+
+button{
+  border:none;
+  border-radius:10px;
+  padding:9px 12px;
+  cursor:pointer;
+  font-weight:600;
+  transition:.2s;
+}
+
+button:hover{
+  transform:translateY(-1px);
+}
+
+/* LIVRE */
+
+.livreBtn{
+  width:100%;
+  min-height:42px;
+  background:#e8f0fe;
+  color:#1a73e8;
+  border:1px solid #d2e3fc;
+}
+
+.livreBtn:hover{
+  background:#d2e3fc;
+}
+
+/* OCUPADO */
+
+.ocupadoBox{
+  background:#e8f0fe;
+  border-left:4px solid #1a73e8;
+  border-radius:12px;
+  padding:12px;
+  color:#1f2937;
+   min-width:95px;
+  text-align:left;
+  box-shadow:0 3px 10px rgba(26,115,232,.12);
+}
+
+.ocupadoBox button{
+  margin-top:6px;
+  width:100%;
+  font-size:12px;
+  padding:7px 8px;
+}
+
+.ocupadoBox button:first-of-type{
+  background:#1a73e8;
+  color:white;
+}
+
+.ocupadoBox button:last-of-type{
+  background:#fee2e2;
+  color:#b91c1c;
+}
+
+.ocupadoContinua{
+  background:#f8fafc;
+  color:#374151;
+  border-left:4px solid #93c5fd;
+  border-radius:10px;
+  padding:9px;
+  text-align:left;
+  font-size:12px;
+   min-width:95px;
+}
+
+.continuaTitulo{
+  font-weight:700;
+  color:#2563eb;
+  margin-bottom:4px;
+}
+
+.continuaCliente{
+  font-weight:600;
+  color:#111827;
+  margin-bottom:3px;
+}
+
+.continuaServico{
+  color:#64748b;
+  font-size:12px;
+}
+
+/* ESTADOS */
+
+.indisponivelBox{
+  background:#f3f4f6;
+  color:#9ca3af;
+  border:1px solid #e5e7eb;
+  border-radius:10px;
+  padding:12px;
+  text-align:center;
+  font-weight:600;
+  min-width:130px;
+}
+
+.folgaBox{
+  background:#fff7ed;
+  color:#c2410c;
+  border:1px solid #fed7aa;
+  border-radius:10px;
+  padding:12px;
+  text-align:center;
+  font-weight:600;
+  min-width:130px;
+}
+
+.feriasBox{
+  background:#eef2ff;
+  color:#4338ca;
+  border:1px solid #c7d2fe;
+  border-radius:10px;
+  padding:12px;
+  text-align:center;
+  font-weight:600;
+  min-width:130px;
+}
+
+.prof-sub{
+  font-size:12px;
+  color:#6b7280;
+}
+
+/* MODAL */
+
+.modal{
+  display:none;
+  position:fixed;
+  inset:0;
+  background:rgba(15,23,42,.45);
+  justify-content:center;
+  align-items:center;
+  padding:10px;
+  z-index:100;
+}
+
+.janela{
+  width:100%;
+  max-width:560px;
+  background:white;
+  border-radius:24px;
+  padding:28px;
+  color:#111827;
+  box-shadow:0 20px 50px rgba(0,0,0,.25);
+  animation:abrirModal .25s ease;
+}
+
+@keyframes abrirModal{
+  from{
+    opacity:0;
+    transform:translateY(20px) scale(.98);
+  }
+
+  to{
+    opacity:1;
+    transform:translateY(0) scale(1);
+  }
+}
+
+.janela h2{
+  margin-top:0;
+  color:#111827;
+}
+
+.janela input,
+.janela select{
+  width:100%;
+  height:48px;
+  margin-bottom:12px;
+  border:1px solid #d1d5db;
+  border-radius:12px;
+  padding:0 15px;
+  box-sizing:border-box;
+  background:white;
+  color:#111827;
+  font-size:15px;
+}
+
+.janela input:focus,
+.janela select:focus{
+  outline:none;
+  border-color:#1a73e8;
+  box-shadow:0 0 0 3px rgba(26,115,232,.15);
+}
+
+.botoes{
+  display:flex;
+  gap:10px;
+  margin-top:20px;
+}
+
+.salvar{
+  flex:1;
+  background:#1a73e8;
+  color:white;
+}
+
+.fechar{
+  flex:1;
+  background:#f3f4f6;
+  color:#374151;
+}
+
+/* MOBILE */
+
+@media(max-width:700px){
+
+  body{
+    padding:12px;
+  }
+
+  .topo{
+    flex-direction:column;
+    align-items:stretch;
+    padding:14px;
+  }
+
+  h1{
+    font-size:25px;
+  }
+
+  .subtitulo{
+    font-size:13px;
+  }
+
+  input[type=date]{
+    width:100%;
+    height:54px;
+    font-size:17px;
+  }
+
+  .grade{
+    padding:6px;
+  }
+
+  .tabelaAgenda{
+    min-width:350px;
+  }
+
+  .tabelaAgenda th{
+    padding:10px;
+    font-size:12px;
+  }
+
+  .colunaHora{
+    padding:10px !important;
+    font-size:13px;
+  }
+
+  .livreBtn,
+  .indisponivelBox,
+  .folgaBox,
+  .feriasBox,
+  .ocupadoContinua{
+    min-height:42px;
+    padding:10px;
+    font-size:12px;
+  }
+
+  .ocupadoBox{
+  background:#e8f0fe;
+  border-left:4px solid #1a73e8;
+  border-radius:10px;
+  padding:9px;
+  color:#1f2937;
+  min-width:135px;
+  text-align:left;
+  box-shadow:0 2px 8px rgba(26,115,232,.10);
+  font-size:13px;
+}
+
+  .modal{
+    align-items:flex-end;
+    padding:8px;
+  }
+
+  .janela{
+    width:100%;
+    max-width:none;
+    margin:0;
+    padding:24px;
+    border-radius:24px 24px 18px 18px;
+    max-height:95vh;
+    overflow-y:auto;
+    animation:subirModal .25s ease;
+  }
+
+  @keyframes subirModal{
+    from{
+      opacity:0;
+      transform:translateY(100%);
+    }
+
+    to{
+      opacity:1;
+      transform:translateY(0);
+    }
+  }
+
+  .janela input,
+  .janela select{
+    height:54px;
+    font-size:16px;
+  }
+
+  .botoes{
+    flex-direction:column;
+  }
+
+}
+
+.dashboardAgenda{
+
+  display:grid;
+
+  grid-template-columns:
+    repeat(auto-fit,minmax(180px,1fr));
+
+  gap:15px;
+
+  margin-bottom:25px;
+
+}
+
+.cardInfo{
+
+  background:white;
+
+  border-radius:18px;
+
+  padding:20px;
+
+  text-align:center;
+
+  box-shadow:
+    0 4px 15px rgba(224, 138, 10, 0.06);
+
+}
+
+.numero{
+
+  font-size:32px;
+
+  font-weight:700;
+
+}
+
+.texto{
+
+  margin-top:5px;
+
+  color:#64748b;
+
+  font-size:14px;
+
+}
+
+.livres .numero{
+  color:#16a34a;
+}
+
+.agendados .numero{
+  color:#2563eb;
+}
+
+.folgas .numero{
+  color:#ea580c;
+}
+
+.bloqueios .numero{
+  color:#7c3aed;
+}
+
+.proximo{
+
+  animation:
+    pulsar 2s infinite;
+
+  border:
+    2px solid #f59e0b;
+
+}
+
+@keyframes pulsar{
+
+  0%{
+
+    box-shadow:
+      0 0 0 0
+      rgba(245,158,11,.6);
+
+  }
+
+  70%{
+
+    box-shadow:
+      0 0 0 12px
+      rgba(245,158,11,0);
+
+  }
+
+  100%{
+
+    box-shadow:
+      0 0 0 0
+      rgba(245,158,11,0);
+
+  }
+
+}
+
+.faturamento .numero{
+  color:#059669;
+}
+
+</style>
+
+</head>
+
+
+
+<body>
+
+<div class="container">
+
+  <div class="topo">
+
+    <div>
+      <h1>📅 Agenda</h1>
+
+      <div class="subtitulo">
+        Gerencie os agendamentos do dia
+      </div>
+    </div>
+
+    <input
+      type="date"
+      id="data"
+      onchange="carregarAgenda()">
+
+  </div>
+
+  <div class="dashboardAgenda">
+
+    <div class="cardInfo livres">
+      <div class="numero" id="totalLivres">0</div>
+      <div class="texto">Horários Livres</div>
+    </div>
+
+    <div class="cardInfo agendados">
+      <div class="numero" id="totalAgendados">0</div>
+      <div class="texto">Agendamentos</div>
+    </div>
+
+
+    <div class="cardInfo faturamento">
+
+  <div
+    class="numero"
+    id="faturamentoPrevisto">
+
+    R$ 0
+
+  </div>
+
+  <div class="texto">
+    Faturamento Previsto
+  </div>
+
+</div>
+
+  </div>
+
+  <div id="agenda" class="grade"></div>
+
+
+<script>
+
+  let agendamentoEditando = null;
+
+  let profissionais = [];
+
+let dataSelecionada = "";
+
+let horaSelecionada = "";
+
+  async function carregarProfissionaisSistema(){
+
+  const resposta =
+    await fetch("/profissionais");
+
+  profissionais =
+    await resposta.json();
+
+}
+
+
+const horarios = [];
+
+for(let hora = 8; hora <= 18; hora++){
+
+  for(let minuto = 0; minuto < 60; minuto += 10){
+
+    if(
+      hora === 18 &&
+      minuto > 0
+    ){
+      break;
+    }
+
+    horarios.push(
+
+      String(hora)
+        .padStart(2,"0")
+
+      +
+
+      ":"
+
+      +
+
+      String(minuto)
+        .padStart(2,"0")
+
+    );
+
+  }
+
+}
+
+function horaParaMinutos(h){
+
+  const [hora,minuto] =
+    h.split(":").map(Number);
+
+  return hora * 60 + minuto;
+
+}
+
+function horarioDentroDoServico(
+  horarioTela,
+  horaInicio,
+  duracao
+){
+
+  const tela =
+    horaParaMinutos(horarioTela);
+
+  const inicio =
+    horaParaMinutos(horaInicio);
+
+  const fim =
+    inicio + Number(duracao);
+
+  return tela >= inicio &&
+         tela < fim;
+
+}
+
+function horarioInicial(
+  horarioTela,
+  horaInicio
+){
+
+  return horarioTela === horaInicio;
+
+}
+
+async function carregarAgenda(){
+
+  const data =
+    document.getElementById("data").value;
+
+  if(!data) return;
+
+  const resposta =
+    await fetch(`/agenda/${data}`);
+
+  const agendamentos =
+    await resposta.json();
+
+  let faturamento = 0;
+  
+  agendamentos.forEach(a=>{
+
+  faturamento +=
+    Number(
+      a.servico_valor || 0
+    );
+
+});
+
+  const respostaBloqueios =
+    await fetch("/bloqueios");
+
+  const bloqueios =
+    await respostaBloqueios.json();
+
+  let livres = 0;
+  let totalFolgas = 0;
+  let bloqueiosTotal = 0;
+
+  let html = `
+
+    <table class="tabelaAgenda">
+
+      <tr>
+
+        <th>Horário</th>
+
+        ${profissionais.map(p=>`
+
+          <th>
+            ${p.nome}
+          </th>
+
+        `).join("")}
+
+      </tr>
+
+  `;
+
+  horarios.forEach(h=>{
+
+    html += `<tr>`;
+
+    html += `
+
+      <td class="colunaHora">
+        ${h}
+      </td>
+
+    `;
+
+    profissionais.forEach(p=>{
+
+      const diaSemana =
+        new Date(data + "T00:00:00")
+        .getDay();
+
+      const folgasProfissional = [
+
+        p.folga_domingo,
+        p.folga_segunda,
+        p.folga_terca,
+        p.folga_quarta,
+        p.folga_quinta,
+        p.folga_sexta,
+        p.folga_sabado
+
+      ];
+
+      if(folgasProfissional[diaSemana] == 1){
+
+        totalFolgas++;
+
+        html += `
+
+          <td>
+            <div class="folgaBox">
+              Folga
+            </div>
+          </td>
+
+        `;
+
+        return;
+
+      }
+
+      const bloqueado =
+        bloqueios.find(b=>
+
+          b.profissional_id == p.id &&
+
+          data >= b.data_inicio &&
+
+          data <= b.data_fim
+
+        );
+
+      if(bloqueado){
+
+        bloqueiosTotal++;
+
+        html += `
+
+          <td>
+            <div class="feriasBox">
+              ${bloqueado.motivo}
+            </div>
+          </td>
+
+        `;
+
+        return;
+
+      }
+
+      const foraExpediente =
+        h < p.hora_inicio ||
+        h >= p.hora_fim;
+
+      if(foraExpediente){
+
+        html += `
+
+          <td>
+            <div class="indisponivelBox">
+              ⚫ Indisponível
+            </div>
+          </td>
+
+        `;
+
+        return;
+
+      }
+
+      
+
+      const ocupado =
+        agendamentos.find(a=>
+
+          a.profissional_id == p.id &&
+
+          horarioDentroDoServico(
+            h,
+            a.hora,
+            a.servico_duracao || 30
+          )
+
+        );
+
+      if(ocupado){
+
+        const inicio =
+          horarioInicial(
+            h,
+            ocupado.hora
+          );
+
+        if(inicio){
+
+          const agora =
+            new Date();
+
+          const inicioAtendimento =
+            new Date(
+              `${ocupado.data}T${ocupado.hora}`
+            );
+
+          const diferencaMinutos =
+            (inicioAtendimento - agora)
+            / 1000 / 60;
+
+          const classeProximo =
+            diferencaMinutos >= 0 &&
+            diferencaMinutos <= 30
+            ? "proximo"
+            : "";
+
+          html += `
+
+            <td>
+
+              <div class="ocupadoBox ${classeProximo}">
+
+                <div style="font-weight:700">
+                  👤 ${ocupado.cliente}
+                </div>
+
+                <div style="margin-top:8px">
+                  ${ocupado.servico_nome || ""}
+                </div>
+
+                <div style="
+                  margin-top:8px;
+                  font-size:13px;
+                ">
+                  📞 ${ocupado.telefone || ""}
+                </div>
+
+                <button onclick="editar(${ocupado.id})">
+                  Editar
+                </button>
+
+                <button onclick="cancelar(${ocupado.id})">
+                  Cancelar
+                </button>
+
+              </div>
+
+            </td>
+
+          `;
+
+        }else{
+
+  html += `
+
+    <td>
+
+      <div class="ocupadoContinua">
+
+        <div class="continuaTitulo">
+          Continuação
+        </div>
+
+        <div class="continuaCliente">
+          👤 ${ocupado.cliente}
+        </div>
+
+        <div class="continuaServico">
+          ${ocupado.servico_nome || ""}
+        </div>
+
+      </div>
+
+    </td>
+
+  `;
+
+}
+
+      }else{
+
+        livres++;
+
+        html += `
+
+          <td>
+
+            <button
+              class="livreBtn"
+              onclick="
+                abrirAgendamento(
+                  '${data}',
+                  '${h}',
+                  ${p.id}
+                )">
+
+              ➕ Agendar
+
+            </button>
+
+          </td>
+
+        `;
+
+      }
+
+    });
+
+    html += `</tr>`;
+
+  });
+
+  html += `</table>`;
+
+  document.getElementById("agenda").innerHTML = html;
+
+  document.getElementById("totalLivres").innerText =
+    livres;
+
+  document.getElementById("totalAgendados").innerText =
+    agendamentos.length;
+
+
+  document.getElementById(
+  "faturamentoPrevisto"
+).innerText =
+
+  "R$ " +
+
+  faturamento.toLocaleString(
+    "pt-BR",
+    {
+      minimumFractionDigits:2
+    }
+  );  
+
+}
+
+async function abrirAgendamento(
+  data,
+  hora,
+  profissionalId
+){
+
+  dataSelecionada = data;
+  horaSelecionada = hora;
+
+  await carregarServicos();
+  await carregarProfissionais();
+
+  document.getElementById(
+    "profissional"
+  ).value = profissionalId;
+
+  document.getElementById("cliente").value = "";
+  document.getElementById("telefone").value = "";
+
+  document.getElementById("modal")
+    .style.display = "flex";
+
+    agendamentoEditando = null;
+
+document.querySelector(".janela h2")
+  .innerText = "Novo Agendamento";
+
+
+}
+
+function fecharModal(){
+
+  document
+    .getElementById("modal")
+    .style.display = "none";
+
+}
+
+async function carregarServicos(){
+
+  const resposta =
+    await fetch("/servicos");
+
+  const servicos =
+    await resposta.json();
+
+  const select =
+    document.getElementById("servico");
+
+  select.innerHTML =
+    servicos.map(s=>`
+
+      <option
+        value="${s.id}"
+        data-valor="${s.valor}">
+
+        ${s.nome}
+
+      </option>
+
+    `).join("");
+
+  atualizarValor();
+
+}
+
+async function cancelar(id){
+
+  const confirmar = confirm(
+    "Deseja cancelar este agendamento?"
+  );
+
+  if(!confirmar) return;
+
+  await fetch(
+    `/agendamentos/${id}`,
+    {
+      method:"DELETE"
+    }
+  );
+
+  carregarAgenda();
+
+}
+
+async function salvarAgendamento(){
+
+  const cliente =
+    document.getElementById("cliente").value;
+
+  const telefone =
+    document.getElementById("telefone").value;
+
+  const servico_id =
+    document.getElementById("servico").value;
+
+  const profissional_id =
+    document.getElementById("profissional").value;
+
+  const url =
+  agendamentoEditando
+  ? `/agendamentos/${agendamentoEditando}`
+  : "/agendamentos";
+
+const metodo =
+  agendamentoEditando
+  ? "PUT"
+  : "POST";
+
+const resposta =
+  await fetch(url,{
+
+    method:metodo,
+
+    headers:{
+      "Content-Type":"application/json"
+    },
+
+    body:JSON.stringify({
+
+      cliente,
+      telefone,
+      servico_id,
+      profissional_id,
+      data:dataSelecionada,
+      hora:horaSelecionada
+
+    })
+
+  });
+
+  const dados =
+    await resposta.json();
+
+  if(!resposta.ok){
+
+    alert(dados.erro);
+    return;
+
+  }
+
+  fecharModal();
+
+agendamentoEditando = null;
+
+carregarAgenda();
+}
+
+async function carregarProfissionais(){
+
+  const resposta =
+    await fetch("/profissionais");
+
+  const profissionais =
+    await resposta.json();
+
+  document.getElementById(
+    "profissional"
+  ).innerHTML =
+    profissionais.map(p=>`
+
+      <option value="${p.id}">
+        ${p.nome}
+      </option>
+
+    `).join("");
+
+}
+
+function atualizarValor(){
+
+  const select =
+    document.getElementById("servico");
+
+  if(
+    !select ||
+    select.selectedIndex < 0
+  ){
+    return;
+  }
+
+  const valor =
+    select.options[
+      select.selectedIndex
+    ].dataset.valor;
+
+  document.getElementById("valor")
+    .value =
+    "R$ " +
+    Number(valor).toFixed(2);
+    
+}
+
+  async function editar(id){
+
+  const resposta =
+    await fetch(`/agendamentos/${id}`);
+
+  const agendamento =
+    await resposta.json();
+
+  await carregarServicos();
+  await carregarProfissionais();
+
+  document.getElementById("cliente")
+    .value = agendamento.cliente || "";
+
+  document.getElementById("telefone")
+    .value = agendamento.telefone || "";
+
+  document.getElementById("servico")
+    .value = agendamento.servico_id;
+
+  document.getElementById("profissional")
+    .value = agendamento.profissional_id;
+
+  document.getElementById("valor")
+    .value = "";
+
+  atualizarValor();
+
+  dataSelecionada =
+    agendamento.data;
+
+  horaSelecionada =
+    agendamento.hora;
+
+  agendamentoEditando = id;
+
+  document.querySelector(".janela h2")
+  .innerText = "Editar Agendamento";
+
+  document.getElementById("modal")
+    .style.display = "flex";
+
+}
+
+document.addEventListener("DOMContentLoaded", async ()=>{
+
+  document
+    .getElementById("data")
+    .valueAsDate = new Date();
+
+  await carregarProfissionaisSistema();
+
+  await carregarAgenda();
+
+});
+
+</script>
+
+<div id="modal" class="modal">
+
+  <div class="janela">
+
+    <h2>Novo Agendamento</h2>
+
+    <input
+      id="cliente"
+      placeholder="Cliente">
+
+    <input
+      id="telefone"
+      placeholder="Telefone">
+
+    <select
+  id="servico"
+  onchange="atualizarValor()">
+    </select>
+
+    <select
+  id="profissional">
+    </select>
+
+    <input
+      id="valor"
+      readonly>
+
+    <div class="botoes">
+
+      <button
+        class="salvar"
+        onclick="salvarAgendamento()">
+
+        Salvar
+
+      </button>
+
+      <button
+        class="fechar"
+        onclick="fecharModal()">
+
+        Cancelar
+
+      </button>
+
+    </div>
+
+  </div>
+
+</div>
+
+</body>
+</html>

@@ -1,0 +1,85 @@
+<h1>Clientes</h1>
+
+<input id="nome" placeholder="Nome">
+
+<input id="telefone" placeholder="Telefone">
+
+<input id="email" placeholder="Email">
+
+<textarea
+  id="observacoes"
+  placeholder="Observações">
+</textarea>
+
+<button onclick="salvar()">
+  Salvar
+</button>
+
+<hr>
+
+<div id="lista"></div>
+
+<script>
+
+  
+    async function salvar(){
+
+  await fetch("/clientes",{
+
+    method:"POST",
+
+    headers:{
+      "Content-Type":"application/json"
+    },
+
+    body:JSON.stringify({
+
+      nome:
+      document.getElementById("nome").value,
+
+      telefone:
+      document.getElementById("telefone").value,
+
+      email:
+      document.getElementById("email").value,
+
+      observacoes:
+      document.getElementById("observacoes").value
+
+    })
+
+  });
+
+  carregar();
+
+}
+
+async function carregar(){
+
+  const resposta =
+    await fetch("/clientes");
+
+  const clientes =
+    await resposta.json();
+
+  document.getElementById("lista")
+    .innerHTML = clientes.map(c=>`
+
+      <div class="card">
+
+        <h3>${c.nome}</h3>
+
+        <p>${c.telefone || ""}</p>
+
+        <p>${c.email || ""}</p>
+
+      </div>
+
+    `).join("");
+
+}
+
+carregar();
+
+
+</script>
