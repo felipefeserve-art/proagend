@@ -63,84 +63,514 @@ button:disabled{
 }
 
 /* =========================
-   2. TOPO / FILTROS
+   2. CABEÇALHO COMPACTO
 ========================= */
 
-.topo{
-  background:linear-gradient(135deg,#ffffff,#f8fafc);
-  border:1px solid #e5e7eb;
-  border-radius:24px;
-  padding:24px;
-  display:flex;
-  flex-direction:column;
+body{
+  padding:0;
+}
+
+.cabecalhoAgendaCompacto{
+  position:sticky;
+  top:0;
+  z-index:500;
+
+  min-height:60px;
+  padding:8px 16px;
+
+  display:grid;
+  grid-template-columns:auto minmax(330px,1fr) minmax(260px,420px) auto;
   align-items:center;
-  gap:18px;
-  box-shadow:0 18px 45px rgba(15,23,42,.08);
+  gap:14px;
+
+  background:rgba(255,255,255,.96);
+  border-bottom:1px solid #e5e7eb;
+  box-shadow:0 3px 14px rgba(15,23,42,.07);
+  backdrop-filter:blur(12px);
 }
 
-.tituloSistema{
-  text-align:center;
-}
-
-.tituloSistema h2{
-  font-size:32px;
-  font-weight:900;
-  color:#111827;
-  letter-spacing:-1px;
-}
-
-.tituloSistema span{
-  color:#64748b;
-  font-size:15px;
-}
-
-.filtros{
-  width:100%;
+.cabecalhoMarca,
+.navegacaoCabecalho,
+.controlesCabecalho,
+.acoesCabecalho{
   display:flex;
+  align-items:center;
+}
+
+.cabecalhoMarca{
+  gap:9px;
+}
+
+.logoCabecalho{
+  width:34px;
+  height:34px;
+  border-radius:10px;
+  display:flex;
+  align-items:center;
   justify-content:center;
-  align-items:flex-end;
-  gap:18px;
-  flex-wrap:wrap;
+  background:#1a73e8;
+  color:white;
+  font-size:11px;
+  font-weight:900;
 }
 
-.grupoFiltro{
+.nomeCabecalho{
+  color:#1f2937;
+  font-size:18px;
+  font-weight:800;
+  white-space:nowrap;
+}
+
+.navegacaoCabecalho{
+  min-width:0;
+  gap:4px;
+}
+
+.btnIconeCabecalho{
+  width:36px;
+  height:36px;
+  padding:0;
+  border-radius:50%;
   display:flex;
-  flex-direction:column;
-  gap:6px;
+  align-items:center;
+  justify-content:center;
+  background:transparent;
+  color:#475569;
+  font-size:22px;
+  transition:.2s;
 }
 
-.grupoFiltro label{
-  color:#64748b;
+.btnIconeCabecalho:hover{
+  background:#f1f5f9;
+  color:#1a73e8;
+}
+
+.btnMenuAgenda{
+  font-size:22px;
+}
+
+.btnHoje{
+  height:36px;
+  min-width:84px;
+  padding:0 13px;
+  border:1px solid #d1d5db;
+  border-radius:18px;
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  gap:6px;
+  background:white;
+  color:#1f2937;
   font-size:12px;
   font-weight:800;
-  margin-left:4px;
+  transition:.2s;
 }
 
-.filtros select,
-.filtros input{
-  width:250px;
-  height:52px;
-  border-radius:16px;
-  padding:0 16px;
-  font-size:15px;
+.btnHoje:hover{
+  background:#f8fafc;
+  border-color:#94a3b8;
 }
 
-.topo button{
-  height:52px;
-  border-radius:16px;
-  padding:0 24px;
-  background:#f1f5f9;
-  color:#111827;
-  transition:.25s;
+.tituloPeriodo{
+  min-width:0;
+  margin-left:8px;
+  overflow:hidden;
+  text-overflow:ellipsis;
+  white-space:nowrap;
+  color:#1f2937;
+  font-size:16px;
+  font-weight:750;
 }
 
-.topo button:hover{
-  transform:translateY(-2px);
-  box-shadow:0 12px 28px rgba(26,115,232,.22);
+.controlesCabecalho{
+  min-width:0;
+  gap:8px;
+}
+
+.campoProfissionalCabecalho{
+  min-width:0;
+  flex:1;
+  height:40px;
+  padding:0 10px;
+  display:flex;
+  align-items:center;
+  gap:7px;
+  border:1px solid #e2e8f0;
+  border-radius:20px;
+  background:#f8fafc;
+}
+
+.campoProfissionalCabecalho span{
+  flex-shrink:0;
+  font-size:14px;
+}
+
+#profissional{
+  width:100%;
+  min-width:0;
+  height:36px;
+  padding:0 4px;
+  border:0;
+  outline:0;
+  box-shadow:none;
+  background:transparent;
+  color:#334155;
+  font-size:13px;
+  font-weight:700;
+}
+
+#dataBase{
+  width:142px;
+  height:40px;
+  padding:0 9px;
+  border-radius:20px;
+  font-size:12px;
+}
+
+.acoesCabecalho{
+  justify-content:flex-end;
 }
 
 #agendaSemanal{
-  margin-top:20px;
+  margin-top:0;
+  padding:12px 20px 20px;
+}
+
+.overlayMenuPrincipal{
+  position:fixed;
+  inset:0;
+  z-index:699;
+  background:rgba(15,23,42,.35);
+  opacity:0;
+  visibility:hidden;
+  transition:.25s;
+}
+
+.overlayMenuPrincipal.aberto{
+  opacity:1;
+  visibility:visible;
+}
+
+.menuPrincipal{
+  position:fixed;
+  top:0;
+  left:-300px;
+  z-index:700;
+  width:280px;
+  max-width:86vw;
+  height:100dvh;
+  padding:18px;
+  background:white;
+  box-shadow:18px 0 45px rgba(15,23,42,.18);
+  transition:left .28s ease;
+  overflow-y:auto;
+}
+
+.menuPrincipal.aberto{
+  left:0;
+}
+
+.menuPrincipalTopo{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:10px;
+  padding-bottom:16px;
+  margin-bottom:10px;
+  border-bottom:1px solid #e5e7eb;
+}
+
+.menuPrincipalTopo strong{
+  font-size:17px;
+}
+
+.menuPrincipalFechar{
+  width:34px;
+  height:34px;
+  padding:0;
+  border-radius:50%;
+  background:#f1f5f9;
+  color:#475569;
+  font-size:20px;
+}
+
+.menuPrincipalLinks{
+  display:grid;
+  gap:6px;
+}
+
+.menuPrincipalLinks a{
+  min-height:44px;
+  padding:0 12px;
+  display:flex;
+  align-items:center;
+  gap:10px;
+  border-radius:12px;
+  color:#334155;
+  font-size:14px;
+  font-weight:750;
+  text-decoration:none;
+}
+
+.menuPrincipalLinks a:hover,
+.menuPrincipalLinks a.ativo{
+  background:#e8f0fe;
+  color:#1a73e8;
+}
+
+body.menuAberto{
+  overflow:hidden;
+}
+
+/* =========================
+   MENU LATERAL
+========================= */
+
+body.menuAberto{
+  overflow:hidden;
+}
+
+.overlayMenu{
+  position:fixed;
+  inset:0;
+
+  background:rgba(15,23,42,.38);
+
+  opacity:0;
+  visibility:hidden;
+
+  z-index:1190;
+
+  transition:
+    opacity .25s ease,
+    visibility .25s ease;
+}
+
+.overlayMenu.aberto{
+  opacity:1;
+  visibility:visible;
+}
+
+.menuPrincipal{
+  position:fixed;
+  top:0;
+  left:-310px;
+
+  width:300px;
+  max-width:88vw;
+  height:100dvh;
+
+  display:flex;
+  flex-direction:column;
+
+  background:#ffffff;
+
+  border-right:1px solid #e5e7eb;
+
+  box-shadow:
+    18px 0 45px rgba(15,23,42,.18);
+
+  z-index:1200;
+
+  transition:left .28s ease;
+}
+
+.menuPrincipal.aberto{
+  left:0;
+}
+
+/* Topo */
+
+.menuTopo{
+  min-height:76px;
+  padding:14px 16px;
+
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:12px;
+
+  border-bottom:1px solid #e5e7eb;
+}
+
+.menuMarca{
+  min-width:0;
+
+  display:flex;
+  align-items:center;
+  gap:10px;
+}
+
+.menuLogo{
+  width:40px;
+  height:40px;
+  flex-shrink:0;
+
+  display:flex;
+  align-items:center;
+  justify-content:center;
+
+  border-radius:12px;
+
+  background:#1a73e8;
+  color:#ffffff;
+
+  font-size:12px;
+  font-weight:900;
+}
+
+.menuMarca strong{
+  display:block;
+
+  color:#111827;
+  font-size:15px;
+  font-weight:900;
+}
+
+.menuMarca span{
+  display:block;
+
+  margin-top:2px;
+
+  color:#64748b;
+  font-size:10px;
+}
+
+.btnFecharMenu{
+  width:34px;
+  height:34px;
+  padding:0;
+
+  display:flex;
+  align-items:center;
+  justify-content:center;
+
+  border-radius:50%;
+
+  background:#f1f5f9;
+  color:#475569;
+
+  font-size:22px;
+  font-weight:500;
+}
+
+.btnFecharMenu:hover{
+  background:#e8f0fe;
+  color:#1a73e8;
+}
+
+/* Navegação */
+
+.menuNavegacao{
+  flex:1;
+
+  display:flex;
+  flex-direction:column;
+  gap:4px;
+
+  padding:12px 10px;
+
+  overflow-y:auto;
+}
+
+.menuNavegacao a{
+  min-height:44px;
+  padding:0 13px;
+
+  display:flex;
+  align-items:center;
+  gap:12px;
+
+  border-radius:12px;
+
+  color:#334155;
+  text-decoration:none;
+
+  font-size:13px;
+  font-weight:800;
+
+  transition:
+    background .2s ease,
+    color .2s ease,
+    transform .2s ease;
+}
+
+.menuNavegacao a span{
+  width:22px;
+
+  display:flex;
+  align-items:center;
+  justify-content:center;
+
+  font-size:17px;
+}
+
+.menuNavegacao a:hover{
+  background:#f1f5f9;
+  color:#1a73e8;
+
+  transform:translateX(2px);
+}
+
+.menuNavegacao a.ativo{
+  background:#e8f0fe;
+  color:#1a73e8;
+}
+
+/* Rodapé */
+
+.menuRodape{
+  padding:12px;
+
+  border-top:1px solid #e5e7eb;
+}
+
+.btnSairMenu{
+  width:100%;
+  height:44px;
+  padding:0 13px;
+
+  display:flex;
+  align-items:center;
+  gap:12px;
+
+  border-radius:12px;
+
+  background:#fef2f2;
+  color:#b91c1c;
+
+  font-size:13px;
+  font-weight:900;
+}
+
+.btnSairMenu:hover{
+  background:#fee2e2;
+}
+
+/* Celular */
+
+@media(max-width:600px){
+
+  .menuPrincipal{
+    left:-92vw;
+
+    width:86vw;
+    max-width:320px;
+  }
+
+  .menuTopo{
+    min-height:68px;
+    padding:12px;
+  }
+
+  .menuNavegacao{
+    padding:10px 8px;
+  }
+
+  .menuNavegacao a{
+    min-height:46px;
+  }
+
 }
 
 /* =========================
@@ -148,7 +578,7 @@ button:disabled{
 ========================= */
 
 .cockpitWrapper{
-  margin-bottom:14px;
+  margin-bottom:10px;
 }
 
 .cockpitCabecalho{
@@ -390,54 +820,28 @@ button:disabled{
 }
 
 /* =========================
-   4. BARRA DE SEMANA
-========================= */
-
-.barraSemana{
-  background:white;
-  border:1px solid #e5e7eb;
-  border-radius:18px;
-  padding:12px;
-  margin-bottom:14px;
-  display:grid;
-  grid-template-columns:1fr auto 1fr;
-  gap:12px;
-  align-items:center;
-  box-shadow:0 8px 25px rgba(15,23,42,.06);
-}
-
-.barraSemana button{
-  height:42px;
-  border-radius:14px;
-  background:#f1f5f9;
-  color:#334155;
-  font-weight:900;
-  transition:.2s;
-}
-
-.barraSemana button:hover{
-  background:#e8f0fe;
-  color:#1a73e8;
-  transform:translateY(-2px);
-}
-
-.barraSemana .btnHoje{
-  min-width:120px;
-  background:#1a73e8;
-  color:white;
-}
-
-/* =========================
    5. AGENDA SEMANAL
 ========================= */
 
 .agendaWrapper{
-  margin-top:20px;
+  position:relative;
+
+  margin-top:8px;
+
+  height:calc(100dvh - 92px);
+  min-height:420px;
+
   background:white;
   border:1px solid #e5e7eb;
   border-radius:18px;
-  box-shadow:0 4px 20px rgba(0,0,0,.06);
+
+  box-shadow:
+    0 4px 20px rgba(0,0,0,.06);
+
   overflow:auto;
+
+  overscroll-behavior:contain;
+  scrollbar-gutter:stable;
 }
 
 .agendaGrid{
@@ -451,17 +855,24 @@ button:disabled{
 .cabecalhoDia{
   position:sticky;
   top:0;
-  z-index:20;
-  background:white;
-  border-bottom:1px solid #e5e7eb;
+  z-index:30;
+  align-self:start;
+  background:#ffffff;
+  border-bottom:1px solid #dbe4f0;
   padding:12px;
   text-align:center;
   font-weight:800;
+
+  box-shadow:
+    0 4px 10px rgba(15,23,42,.07);
 }
 
 .cabecalhoHora{
+  position:sticky;
+  top:0;
   left:0;
-  z-index:30;
+  z-index:50;
+  background:#ffffff;
   border-right:1px solid #e5e7eb;
 }
 
@@ -476,38 +887,80 @@ button:disabled{
   margin-top:3px;
 }
 
+.diaHoje{
+  background:#f8fbff;
+  color:#1a73e8;
+  box-shadow:inset 0 -3px 0 #1a73e8;
+}
+
+.diaHoje .diaData{
+  color:#1a73e8;
+  font-weight:800;
+}
+
 .colunaHora{
   position:sticky;
   left:0;
-  z-index:10;
+  z-index:20;
   background:white;
   border-right:1px solid #e5e7eb;
 }
 
+.horaCheia{
+  background:#f8fbff;
+  color:#1a73e8;
+  font-weight:800;
+  border-bottom:2px solid #cfe3ff;
+}
+
 .horaLinha{
-  height:36px;
+  height:32px;
   border-bottom:1px solid #edf2f7;
   color:#64748b;
   font-size:12px;
   display:flex;
-  align-items:flex-start;
+  align-items:center;
   justify-content:center;
   padding-top:5px;
   transition:.25s;
+  padding-left:8px;
 }
 
 .horaAtual{
-  background:#e8f0fe;
+
+  background:linear-gradient(
+    90deg,
+    #e8f0fe,
+    transparent
+  );
+
   color:#1a73e8;
-  font-weight:900;
-  border-right:4px solid #1a73e8;
+
+  font-weight:800;
+
+  transition:.3s;
+
 }
 
 .colunaDia{
   position:relative;
   cursor:crosshair;
   border-right:1px solid #f1f5f9;
-  background:repeating-linear-gradient(to bottom,#ffffff 0,#ffffff 35px,#f1f5f9 36px);
+
+  background:
+    repeating-linear-gradient(
+      to bottom,
+      rgba(26,115,232,.10) 0,
+      rgba(26,115,232,.10) 1px,
+      transparent 1px,
+      transparent 192px
+    ),
+    repeating-linear-gradient(
+      to bottom,
+      transparent 0,
+      transparent 31px,
+      rgba(226,232,240,.55) 32px
+    );
 }
 
 /* =========================
@@ -523,6 +976,7 @@ button:disabled{
   z-index:80;
   pointer-events:none;
   box-shadow:0 0 14px rgba(26,115,232,.45);
+  transition:top .4s ease;
 }
 
 .linhaAgora::before{
@@ -603,30 +1057,56 @@ button:disabled{
   color:#6b7280;
 }
 
+.agendado{
+  background:#e8f0fe;
+  border-left:5px solid #1a73e8;
+}
+
+.proximoAtendimento{
+  background:#fff7ed;
+  border-left:5px solid #f59e0b;
+  animation:respirar 2.5s infinite;
+}
+
+.emAtendimento{
+  background:linear-gradient(135deg,#dcfce7,#bbf7d0);
+  border-left:5px solid #22c55e;
+}
+
+.finalizadoTempo{
+  background:#f8fafc;
+  border-left:5px solid #94a3b8;
+  opacity:.75;
+  filter:grayscale(.12);
+}
+
 .statusCard{
   display:inline-flex;
   align-items:center;
   gap:6px;
-  background:#22c55e;
   color:white;
   border-radius:999px;
   padding:3px 8px;
   font-size:10px;
   font-weight:900;
   margin-bottom:6px;
+  width:max-content;
 }
 
-.proximoAtendimento{
-  animation:respirar 2.5s infinite;
+.statusAgendado{
+  background:#1a73e8;
 }
 
-.proximoAtendimento .statusCard{
+.statusProximo{
   background:#f59e0b;
 }
 
-.emAtendimento{
-  background:linear-gradient(135deg,#dcfce7,#bbf7d0);
-  border-left:5px solid #22c55e;
+.statusAtendimento{
+  background:#22c55e;
+}
+
+.statusFinalizado{
+  background:#64748b;
 }
 
 @keyframes respirar{
@@ -779,27 +1259,110 @@ button:disabled{
   }
 }
 
+.editarHorariosDisponiveis{
+  display:grid;
+  grid-template-columns:repeat(4,1fr);
+  gap:6px;
+
+  max-height:170px;
+  overflow-y:auto;
+
+  margin-top:6px;
+  padding:3px;
+}
+
+.editarHoraOpcao{
+  height:34px;
+  padding:0 6px;
+
+  border:1px solid #dbe4f0;
+  border-radius:10px;
+
+  background:#ffffff;
+  color:#1a73e8;
+
+  font-size:11px;
+  font-weight:850;
+
+  cursor:pointer;
+  transition:.2s;
+}
+
+.editarHoraOpcao:hover{
+  background:#e8f0fe;
+  border-color:#93c5fd;
+}
+
+.editarHoraOpcao.selecionado{
+  background:#1a73e8;
+  border-color:#1a73e8;
+  color:#ffffff;
+
+  box-shadow:
+    0 6px 14px rgba(26,115,232,.22);
+}
+
+.editarHorarioMensagem{
+  grid-column:1 / -1;
+
+  padding:10px;
+
+  border:1px dashed #cbd5e1;
+  border-radius:10px;
+
+  background:#f8fafc;
+  color:#64748b;
+
+  font-size:11px;
+  text-align:center;
+}
+
+.editarHorarioMensagem.erro{
+  border-color:#fecaca;
+  background:#fef2f2;
+  color:#b91c1c;
+}
+
+@media(max-width:600px){
+
+  .editarHorariosDisponiveis{
+    grid-template-columns:repeat(3,1fr);
+    max-height:150px;
+  }
+
+}
+
 /* =========================
    9. HISTÓRICO DO CLIENTE
 ========================= */
 
 .historicoCliente{
-  margin-top:18px;
+  margin-top:12px;
 }
+
+/* Cabeçalho recolhível */
 
 .historicoCabecalho{
   width:100%;
-  height:42px;
-  border-radius:14px;
-  background:#f8fafc;
-  border:1px solid #e5e7eb;
-  color:#111827;
-  padding:0 12px;
+  height:36px;
+  padding:0 10px;
+
   display:flex;
   align-items:center;
   justify-content:space-between;
-  font-weight:900;
+
+  border:1px solid #e5e7eb;
+  border-radius:11px;
+
+  background:#f8fafc;
+  color:#111827;
+
+  font-weight:850;
   cursor:pointer;
+
+  transition:
+    background .2s ease,
+    border-color .2s ease;
 }
 
 .historicoCabecalho:hover{
@@ -808,18 +1371,25 @@ button:disabled{
 }
 
 .historicoCabecalho span{
-  font-size:14px;
+  font-size:12px;
 }
 
+/* Seta */
+
 .historicoSeta{
-  width:20px;
-  height:20px;
+  width:17px;
+  height:17px;
+
   display:flex;
   align-items:center;
   justify-content:center;
-  font-size:18px;
+
+  font-size:15px;
   color:#64748b;
-  transition:transform .25s ease,color .25s ease;
+
+  transition:
+    transform .25s ease,
+    color .25s ease;
 }
 
 .historicoSeta.aberta{
@@ -827,58 +1397,198 @@ button:disabled{
   color:#1a73e8;
 }
 
+/* Conteúdo recolhível */
+
 .historicoConteudo{
   display:grid;
-  gap:8px;
+  gap:6px;
+
   overflow:hidden;
   max-height:0;
   opacity:0;
-  transform:translateY(-6px);
-  transition:max-height .35s ease,opacity .25s ease,transform .25s ease,margin-top .25s ease;
+
+  transform:translateY(-4px);
+
+  transition:
+    max-height .35s ease,
+    opacity .22s ease,
+    transform .22s ease,
+    margin-top .22s ease;
 }
 
 .historicoConteudo.aberto{
-  max-height:500px;
+  max-height:620px;
   opacity:1;
   transform:translateY(0);
-  margin-top:8px;
+  margin-top:6px;
 }
+
+/* Cabeçalho interno */
+
+.cabecalhoHistorico{
+  text-align:center;
+
+  padding:10px 12px;
+  margin-bottom:6px;
+
+  border:1px solid #dbeafe;
+  border-radius:12px;
+
+  background:
+    linear-gradient(
+      135deg,
+      #f8fbff,
+      #eef6ff
+    );
+
+  box-shadow:
+    0 5px 14px rgba(26,115,232,.06);
+}
+
+.tituloHistorico{
+  color:#1e293b;
+  font-size:14px;
+  font-weight:850;
+}
+
+.subTituloHistorico{
+  margin-top:2px;
+  color:#64748b;
+  font-size:10px;
+}
+
+/* Cards */
 
 .historicoItem{
+  padding:8px 9px;
+
   background:#f8fafc;
   border:1px solid #e5e7eb;
-  border-radius:14px;
-  padding:11px;
+  border-radius:11px;
+
+  transition:
+    background .2s ease,
+    border-color .2s ease;
 }
 
-.historicoItem strong{
+.historicoItem:hover{
+  background:#ffffff;
+  border-color:#dbeafe;
+}
+
+.historicoItemTopo{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:7px;
+
+  margin-bottom:3px;
+}
+
+.historicoItemTopo > strong,
+.historicoItem > strong{
+  min-width:0;
+
   display:block;
+  overflow:hidden;
+  text-overflow:ellipsis;
+  white-space:nowrap;
+
   color:#111827;
-  font-size:14px;
+  font-size:12px;
+  line-height:1.25;
 }
 
-.historicoItem span{
+.historicoItem > span{
   display:block;
+
+  margin-top:2px;
+
   color:#64748b;
-  font-size:12px;
-  margin-top:4px;
+  font-size:10px;
+  line-height:1.3;
 }
 
 .historicoItem small{
   display:block;
-  color:#334155;
-  font-size:12px;
-  margin-top:4px;
+
+  margin-top:2px;
+
+  color:#475569;
+  font-size:10px;
+  line-height:1.3;
 }
+
+/* Status */
+
+.historicoStatus{
+  flex-shrink:0;
+
+  padding:3px 6px;
+
+  border-radius:999px;
+
+  font-size:8px;
+  font-weight:900;
+  line-height:1.2;
+  white-space:nowrap;
+}
+
+.historicoStatusAgendado{
+  background:#e8f0fe;
+  color:#1a73e8;
+}
+
+.historicoStatusFinalizado{
+  background:#dcfce7;
+  color:#15803d;
+}
+
+.historicoStatusCancelado{
+  background:#fee2e2;
+  color:#b91c1c;
+}
+
+/* Estados vazios */
 
 .historicoVazio,
 .historicoCarregando{
+  padding:10px;
+
   background:#f8fafc;
   border:1px dashed #cbd5e1;
-  border-radius:14px;
-  padding:14px;
+  border-radius:11px;
+
   color:#64748b;
-  font-size:13px;
+  font-size:11px;
+  text-align:center;
+}
+
+/* Celular */
+
+@media(max-width:600px){
+
+  .historicoCliente{
+    margin-top:10px;
+  }
+
+  .historicoCabecalho{
+    height:34px;
+  }
+
+  .cabecalhoHistorico{
+    padding:8px 10px;
+  }
+
+  .historicoItem{
+    padding:7px 8px;
+  }
+
+  .historicoStatus{
+    padding:2px 5px;
+    font-size:7px;
+  }
+
 }
 
 /* =========================
@@ -944,6 +1654,153 @@ button:disabled{
   color:#374151 !important;
 }
 
+.horariosNovoSemana{
+  display:grid;
+  grid-template-columns:repeat(4,1fr);
+  gap:7px;
+  margin:10px 0 12px;
+  max-height:190px;
+  overflow-y:auto;
+  padding:4px 4px 4px 0;
+}
+
+.horaNovoSemana{
+  height:38px;
+  border-radius:12px;
+  background:#f1f5f9;
+  border:1px solid #dbe4f0;
+  color:#1a73e8;
+  font-size:13px;
+  font-weight:800;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  cursor:pointer;
+  transition:.2s;
+}
+
+.horaNovoSemana:hover{
+  background:#e8f0fe;
+  transform:translateY(-1px);
+}
+
+.horaNovoSemana.selecionado{
+  background:#1a73e8;
+  color:white;
+  border-color:#1a73e8;
+  box-shadow:0 8px 18px rgba(26,115,232,.25);
+}
+
+.horaNovoSemana.sugerido{
+  border:2px solid #1a73e8;
+}
+
+.horariosNovoSemana::-webkit-scrollbar{
+  width:6px;
+}
+
+.horariosNovoSemana::-webkit-scrollbar-thumb{
+  background:#cbd5e1;
+  border-radius:999px;
+}
+
+@media(max-width:600px){
+
+  .horariosNovoSemana{
+    grid-template-columns:repeat(3,1fr);
+    max-height:170px;
+  }
+
+}
+
+.mensagemHorarioNovo{
+
+  grid-column:1 / -1;
+
+  display:flex;
+  align-items:center;
+  gap:14px;
+
+  padding:14px;
+
+  border-radius:14px;
+
+  background:#f8fbff;
+
+  border:1px solid #d6e8ff;
+
+  box-shadow:0 6px 18px rgba(26,115,232,.08);
+
+}
+
+.iconeMensagemHorario{
+
+  width:48px;
+  height:48px;
+
+  border-radius:50%;
+
+  background:#5b9dff;
+
+  color:white;
+
+  display:flex;
+  align-items:center;
+  justify-content:center;
+
+  font-size:24px;
+
+  flex-shrink:0;
+
+  box-shadow:0 8px 18px rgba(91,157,255,.25);
+
+}
+
+.textoMensagemHorario{
+
+  display:flex;
+  flex-direction:column;
+
+}
+
+.textoMensagemHorario strong{
+
+  color:#0f172a;
+
+  font-size:17px;
+
+  margin-bottom:4px;
+
+}
+
+.textoMensagemHorario span{
+
+  color:#475569;
+
+  font-size:14px;
+
+  line-height:1.4;
+
+}
+
+.statusMudou{
+  animation:statusMudou .35s ease;
+}
+
+@keyframes statusMudou{
+
+  from{
+    opacity:0;
+    transform:translateY(-4px) scale(.96);
+  }
+
+  to{
+    opacity:1;
+    transform:translateY(0) scale(1);
+  }
+
+}
+
 /* =========================
    11. RESPONSIVO
 ========================= */
@@ -959,32 +1816,71 @@ button:disabled{
 }
 
 @media(max-width:700px){
-  body{
-    padding:10px;
+  .cabecalhoAgendaCompacto{
+    min-height:auto;
+    padding:7px 8px;
+    grid-template-columns:auto minmax(0,1fr) auto;
+    gap:6px 8px;
   }
 
-  .topo{
-    padding:18px;
+  .nomeCabecalho{
+    display:none;
   }
 
-  .tituloSistema h2{
-    font-size:26px;
+  .logoCabecalho{
+    width:30px;
+    height:30px;
+    border-radius:8px;
+    font-size:9px;
   }
 
-  .tituloSistema span{
-    font-size:13px;
+  .navegacaoCabecalho{
+    justify-content:center;
   }
 
-  .filtros{
-    width:100%;
-    gap:10px;
+  .btnHoje{
+    min-width:68px;
+    height:32px;
+    padding:0 9px;
+    font-size:11px;
   }
 
-  .grupoFiltro,
-  .filtros select,
-  .filtros input,
-  .filtros button{
-    width:100%;
+  .btnIconeCabecalho{
+    width:32px;
+    height:32px;
+    font-size:19px;
+  }
+
+  .tituloPeriodo{
+    max-width:118px;
+    margin-left:2px;
+    font-size:12px;
+  }
+
+  .controlesCabecalho{
+    grid-column:1 / -1;
+    gap:6px;
+  }
+
+  .campoProfissionalCabecalho{
+    height:36px;
+    border-radius:12px;
+  }
+
+  #profissional{
+    height:32px;
+    font-size:12px;
+  }
+
+  #dataBase{
+    width:128px;
+    height:36px;
+    border-radius:12px;
+    font-size:11px;
+  }
+
+  #agendaSemanal{
+    padding:9px 8px 14px;
   }
 
   .painelSemana{
@@ -1021,31 +1917,6 @@ button:disabled{
     max-height:1400px;
   }
 
-  .barraSemana{
-    grid-template-columns:44px 1fr 44px;
-    gap:8px;
-    padding:10px;
-  }
-
-  .barraSemana button{
-    font-size:0;
-    padding:0;
-  }
-
-  .barraSemana button:first-child::before{
-    content:"◀";
-    font-size:18px;
-  }
-
-  .barraSemana .btnHoje::before{
-    content:"📅 Hoje";
-    font-size:13px;
-  }
-
-  .barraSemana button:last-child::before{
-    content:"▶";
-    font-size:18px;
-  }
 
   .agendaGrid{
     grid-template-columns:65px repeat(7, minmax(130px,1fr));
@@ -1063,6 +1934,24 @@ button:disabled{
     right:-100%;
     border-radius:24px 24px 0 0;
   }
+
+  .agendaWrapper{
+    height:70dvh;
+    min-height:360px;
+    max-height:650px;
+
+    overflow:auto;
+
+    border-radius:14px;
+
+    /* Permite voltar para o cabeçalho da página */
+    overscroll-behavior:auto;
+
+    /* Melhora a rolagem no iPhone e Android */
+    -webkit-overflow-scrolling:touch;
+
+    touch-action:pan-x pan-y;
+  }
 }
 
 @media(max-width:430px){
@@ -1070,4 +1959,29 @@ button:disabled{
   .infoResumoCompacto{
     grid-template-columns:1fr;
   }
+}
+
+@media(max-width:600px){
+
+  .horariosNovoSemana{
+    max-height:180px;
+    grid-template-columns:repeat(3,1fr);
+  }
+
+}
+
+@media(max-width:600px){
+
+  .statusCard{
+
+    font-size:9px;
+
+    padding:2px 6px;
+
+    max-width:100%;
+
+    white-space:nowrap;
+
+  }
+
 }

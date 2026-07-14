@@ -1,97 +1,187 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Agenda Semanal</title>
+  <title>Agenda Semanal</title>
 
-<link rel="preconnect" href="https://fonts.googleapis.com">
-
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-
-<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-
-<link rel="stylesheet" href="/css/agenda-semanal.css?v=5">
-
-
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  
+  <link rel="stylesheet" href="/css/menu-global.css?v=1">
+  <link rel="stylesheet" href="/css/agenda-semanal.css?v=6">
 </head>
 
 <body>
 
-<div class="topo">
+  <div id="menuGlobal"></div>
 
-  <div>
-    <h1>📅 Agenda Semanal</h1>
-    <div>Visualize os atendimentos por profissional</div>
+  
+
+  <header class="cabecalhoAgendaCompacto">
+
+    <div class="cabecalhoMarca">
+      <button
+        type="button"
+        class="btnIconeCabecalho btnMenuAgenda"
+        onclick="abrirMenuPrincipal()"
+        title="Abrir menu"
+        aria-label="Abrir menu">
+        ☰
+      </button>
+
+      <div class="logoCabecalho">PA</div>
+      <strong class="nomeCabecalho">Agenda</strong>
+    </div>
+
+    <div class="navegacaoCabecalho">
+      <button
+        type="button"
+        id="btnHojeAgora"
+        class="btnHoje"
+        onclick="acaoHojeAgora(event)">
+        <span class="btnHojeIcone">📅</span>
+        <span class="btnHojeTexto">Hoje</span>
+      </button>
+
+      <button
+        type="button"
+        class="btnIconeCabecalho"
+        onclick="semanaAnterior()"
+        title="Semana anterior"
+        aria-label="Semana anterior">
+        ‹
+      </button>
+
+      <button
+        type="button"
+        class="btnIconeCabecalho"
+        onclick="proximaSemana()"
+        title="Próxima semana"
+        aria-label="Próxima semana">
+        ›
+      </button>
+
+      <div id="tituloPeriodo" class="tituloPeriodo">
+        Agenda semanal
+      </div>
+    </div>
+
+    <div class="controlesCabecalho">
+      <label class="campoProfissionalCabecalho" title="Profissional">
+        <span>👤</span>
+        <select id="profissional" aria-label="Selecionar profissional"></select>
+      </label>
+
+      <input
+        type="date"
+        id="dataBase"
+        aria-label="Selecionar data"
+        title="Escolher uma data">
+    </div>
+
+    <div class="acoesCabecalho">
+      <button
+        type="button"
+        class="btnIconeCabecalho"
+        onclick="carregarSemana()"
+        title="Atualizar agenda"
+        aria-label="Atualizar agenda">
+        ↻
+      </button>
+    </div>
+
+  </header>
+
+  <div
+    id="overlayMenuPrincipal"
+    class="overlayMenuPrincipal"
+    onclick="fecharMenuPrincipal()">
   </div>
 
-  <div class="filtros">
+  <aside id="menuPrincipal" class="menuPrincipal">
+    <div class="menuPrincipalTopo">
+      <strong>PRO AGEND</strong>
+      <button
+        type="button"
+        class="menuPrincipalFechar"
+        onclick="fecharMenuPrincipal()"
+        aria-label="Fechar menu">
+        ×
+      </button>
+    </div>
 
-    <select id="profissional"></select>
+    <nav class="menuPrincipalLinks">
+      <a href="/dashboard.html">🏠 Dashboard</a>
+      <a href="/agenda-semanal.html" class="ativo">📅 Agenda</a>
+      <a href="/servicos.html">✂️ Serviços</a>
+      <a href="/profissionais.html">👤 Profissionais</a>
+    </nav>
+  </aside>
 
-    <input type="date" id="dataBase">
+  <main id="agendaSemanal"></main>
 
-    <button onclick="carregarSemana()">
-      Buscar
-    </button>
+  <div id="modalNovoSemana" class="modalNovoSemana">
+    <div class="caixaNovoSemana">
+      <h2>Novo Agendamento</h2>
 
+      <input id="novoCliente" placeholder="Cliente">
+      <input id="novoTelefone" placeholder="Telefone">
+
+      <select
+        id="novoServico"
+        onchange="aoTrocarServicoNovo()">
+      </select>
+
+      <input
+        id="novoValor"
+        readonly
+        placeholder="Valor do serviço">
+
+      <div class="infoHorarioNovo" id="infoHorarioNovo"></div>
+
+      <div
+        id="horariosNovoSemana"
+        class="horariosNovoSemana">
+      </div>
+
+      <button type="button" onclick="salvarNovoSemana()">
+        Salvar Agendamento
+      </button>
+
+      <button
+        type="button"
+        class="btnFecharNovo"
+        onclick="fecharNovoSemana()">
+        Cancelar
+      </button>
+    </div>
   </div>
 
-</div>
-
-<div id="agendaSemanal"></div>
-
-<script src="/js/dashboard.js"></script>
-<script src="/js/painel.js"></script>
-<script src="/js/agendamento-semanal.js"></script>
-<script src="/js/agenda-semanal.js"></script>
-
-
-
-<div id="modalNovoSemana" class="modalNovoSemana">
-
-  <div class="caixaNovoSemana">
-
-    <h2>Novo Agendamento</h2>
-
-    <input id="novoCliente" placeholder="Cliente">
-
-    <input id="novoTelefone" placeholder="Telefone">
-
-    <select id="novoServico" onchange="atualizarValorNovo()"></select>
-
-    <input id="novoValor" readonly>
-
-    <div class="infoHorarioNovo" id="infoHorarioNovo"></div>
-
-    <button onclick="salvarNovoSemana()">
-      Salvar Agendamento
-    </button>
-
-    <button class="btnFecharNovo" onclick="fecharNovoSemana()">
-      Cancelar
-    </button>
-
-  </div>
-
-</div>
-
-'<div id="overlayPainel" class="overlayPainel" onclick="fecharPainel()"></div>
-
-<div id="painelDetalhes" class="painelDetalhes">
-
-  <button
-    class="fecharPainel"
+  <div
+    id="overlayPainel"
+    class="overlayPainel"
     onclick="fecharPainel()">
-    ×
-  </button>
+  </div>
 
-  <div id="conteudoPainel"></div>
+  <div id="painelDetalhes" class="painelDetalhes">
+    <button
+      type="button"
+      class="fecharPainel"
+      onclick="fecharPainel()">
+      ×
+    </button>
 
-</div>
+    <div id="conteudoPainel"></div>
+  </div>
 
-
+  <script src="/js/dashboard.js"></script>
+  <script src="/js/painel.js"></script>
+  <script src="/js/agendamento-semanal.js?v=10"></script>
+  <script src="/js/agenda-semanal.js?v=11"></script>
+  <script src="/js/menu-global.js?v=1"></script>
 
 </body>
 </html>

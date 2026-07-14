@@ -1246,11 +1246,52 @@ app.get("/cliente-historico/:telefone", (req, res) => {
         a.data DESC,
         a.hora DESC
 
-      LIMIT 5
+      LIMIT 20
 
     `).all(telefone);
 
   res.json(historico);
+
+});
+
+app.patch("/agendamentos/:id/finalizar", (req, res) => {
+
+  const { id } = req.params;
+
+  const agendamento =
+    db.prepare(`
+      SELECT id, status
+      FROM agendamentos
+      WHERE id = ?
+    `).get(id);
+
+  if(!agendamento){
+
+    return res.status(404).json({
+      erro:"Agendamento não encontrado."
+    });
+
+  }
+
+  if(agendamento.status === "Finalizado"){
+
+    return res.json({
+      sucesso:true,
+      mensagem:"O atendimento já estava finalizado."
+    });
+
+  }
+
+  db.prepare(`
+    UPDATE agendamentos
+    SET status = 'Finalizado'
+    WHERE id = ?
+  `).run(id);
+
+  res.json({
+    sucesso:true,
+    mensagem:"Atendimento finalizado com sucesso."
+  });
 
 });
 

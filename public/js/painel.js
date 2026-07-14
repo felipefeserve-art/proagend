@@ -1,5 +1,7 @@
 let agendamentoSelecionado = null;
 
+let editarHoraSelecionada = "";
+
 function abrirPainelAgendamento(a, fim){
 
   agendamentoSelecionado = a;
@@ -55,13 +57,7 @@ function abrirPainelAgendamento(a, fim){
       <button
         class="btnPainelEditar"
         onclick="editarPainel()">
-        ✏️ Editar
-      </button>
-
-      <button
-        class="btnPainelReagendar"
-        onclick="reagendarPainel()">
-        📅 Reagendar
+        ✏️ Editar / Reagendar 
       </button>
 
       <button
@@ -148,9 +144,22 @@ async function editarPainel(){
     </div>
 
     <div class="detalheBox">
-      <div class="detalheLabel">Hora</div>
-      <input type="time" id="editarHora" value="${agendamentoSelecionado.hora || ""}">
+
+    <div class="detalheLabel">
+      Horários disponíveis
     </div>
+
+    <div
+      id="editarHorariosDisponiveis"
+      class="editarHorariosDisponiveis">
+
+      <div class="editarHorarioMensagem">
+        Carregando horários...
+      </div>
+
+    </div>
+
+  </div>
 
     <div class="acoesPainel">
 
@@ -173,27 +182,95 @@ async function editarPainel(){
 
   await preencherSelectsEdicao();
 
-}
+  editarHoraSelecionada =
+  agendamentoSelecionado.hora || "";
 
-function reagendarPainel(){
-
-  if(!agendamentoSelecionado) return;
-
-  alert(
-    "Reagendar agendamento ID: " +
-    agendamentoSelecionado.id
-  );
+await carregarHorariosDisponiveisEdicao();
 
 }
 
-function finalizarPainel(){
+
+async function finalizarPainel(){
 
   if(!agendamentoSelecionado) return;
 
-  alert(
-    "Finalizar agendamento ID: " +
-    agendamentoSelecionado.id
-  );
+  const confirmar =
+    confirm(
+      `Deseja finalizar o atendimento de ${
+        agendamentoSelecionado.cliente || "este cliente"
+      }?`
+    );
+
+  if(!confirmar) return;
+
+  const botao =
+    document.querySelector(".btnPainelFinalizar");
+
+  if(botao){
+
+    botao.disabled = true;
+    botao.innerText = "⏳ Finalizando...";
+
+  }
+
+  try{
+
+    const resposta =
+      await fetch(
+        `/agendamentos/${agendamentoSelecionado.id}/finalizar`,
+        {
+          method:"PATCH"
+        }
+      );
+
+    const resultado =
+      await resposta.json();
+
+    if(!resposta.ok){
+
+      throw new Error(
+        resultado.erro ||
+        "Não foi possível finalizar o atendimento."
+      );
+
+    }
+
+    if(botao){
+
+      botao.innerText =
+        "✅ Atendimento finalizado";
+
+    }
+
+    agendamentoSelecionado.status =
+      "Finalizado";
+
+    setTimeout(async()=>{
+
+      fecharPainel();
+
+      await carregarSemana();
+
+    },700);
+
+  }catch(erro){
+
+    console.error(
+      "Erro ao finalizar atendimento:",
+      erro
+    );
+
+    if(botao){
+
+      botao.disabled = false;
+      botao.innerText =
+        "✅ Finalizar";
+
+    }
+
+    alert(erro.message);
+
+  }
 
 }
 
@@ -280,8 +357,18 @@ async function salvarEdicaoAgendamento(){
     profissional_id:document.getElementById("editarProfissional").value,
     servico_id:document.getElementById("editarServico").value,
     data:document.getElementById("editarData").value,
-    hora:document.getElementById("editarHora").value
+    hora:editarHoraSelecionada
   };
+
+  if(!editarHoraSelecionada){
+
+  alert(
+    "Selecione um horário disponível."
+  );
+
+  return;
+
+}
 
   const resposta =
     await fetch(`/agendamentos/${agendamentoSelecionado.id}`,{
@@ -358,16 +445,26 @@ async function preencherSelectsEdicao(){
     agendamentoSelecionado.profissional_id;
 
   selectServico.innerHTML =
-    servicosEdicao.map(s=>`
-      <option value="${s.id}">
-        ${s.nome} • R$ ${Number(s.valor).toFixed(2)}
-      </option>
-    `).join("");
+  servicosEdicao.map(s=>`
+
+    <option
+      value="${s.id}"
+      data-duracao="${s.duracao}">
+
+      ${s.nome} •
+      R$ ${Number(s.valor).toFixed(2)} •
+      ${s.duracao} min
+
+    </option>
+
+  `).join("");
 
   selectServico.value =
     agendamentoSelecionado.servico_id;
 
-  selectProfissional.addEventListener("change", async()=>{
+  selectProfissional.addEventListener(
+  "change",
+  async()=>{
 
     await carregarServicosEditarPorProfissional(
       selectProfissional.value
@@ -375,12 +472,35 @@ async function preencherSelectsEdicao(){
 
     selectServico.innerHTML =
       servicosEdicao.map(s=>`
-        <option value="${s.id}">
-          ${s.nome} • R$ ${Number(s.valor).toFixed(2)}
+
+        <option
+          value="${s.id}"
+          data-duracao="${s.duracao}">
+
+          ${s.nome} •
+          R$ ${Number(s.valor).toFixed(2)} •
+          ${s.duracao} min
+
         </option>
+
       `).join("");
 
-  });
+    await carregarHorariosDisponiveisEdicao();
+
+  }
+);
+
+selectServico.addEventListener(
+  "change",
+  carregarHorariosDisponiveisEdicao
+);
+
+document
+  .getElementById("editarData")
+  ?.addEventListener(
+    "change",
+    carregarHorariosDisponiveisEdicao
+  );
 
 }
 
@@ -446,18 +566,84 @@ async function carregarHistoricoCliente(telefone){
 
   }
 
-  conteudo.innerHTML =
-    historico.map(h=>`
+  conteudo.innerHTML = `
+
+  <div class="cabecalhoHistorico">
+
+    <div class="tituloHistorico">
+        📚 Histórico do Cliente
+    </div>
+
+    <div class="subTituloHistorico">
+        Últimos 20 atendimentos
+    </div>
+
+  </div>
+
+  ` + historico.map(h=>{
+
+    const status =
+      h.status || "Agendado";
+
+    let classeStatus =
+      "historicoStatusAgendado";
+
+    let textoStatus =
+      "📅 Agendado";
+
+    if(status === "Finalizado"){
+
+      classeStatus =
+        "historicoStatusFinalizado";
+
+      textoStatus =
+        "✅ Finalizado";
+
+    }
+
+    if(status === "Cancelado"){
+
+      classeStatus =
+        "historicoStatusCancelado";
+
+      textoStatus =
+        "❌ Cancelado";
+
+    }
+
+    return `
+
       <div class="historicoItem">
-        <strong>${h.servico_nome || "Serviço"}</strong>
+
+        <div class="historicoItemTopo">
+
+          <strong>
+            ${h.servico_nome || "Serviço"}
+          </strong>
+
+          <span class="historicoStatus ${classeStatus}">
+            ${textoStatus}
+          </span>
+
+        </div>
+
         <span>
-          ${formatarDataBR(h.data)} • ${h.hora}
+          📅 ${formatarDataBR(h.data)} • ⏰ ${h.hora}
         </span>
+
         <small>
-          ${h.profissional_nome || "-"} • R$ ${Number(h.servico_valor || 0).toFixed(2)}
+          👤 ${h.profissional_nome || "-"}
         </small>
+
+        <small>
+          💰 R$ ${Number(h.servico_valor || 0).toFixed(2)}
+        </small>
+
       </div>
-    `).join("");
+
+    `;
+
+  }).join("");
 
 }
 
@@ -474,4 +660,237 @@ function alternarHistoricoCliente(){
   conteudo.classList.toggle("aberto");
 
   seta.classList.toggle("aberta");
+}
+
+async function carregarHorariosDisponiveisEdicao(){
+
+  const caixa =
+    document.getElementById(
+      "editarHorariosDisponiveis"
+    );
+
+  const profissional =
+    document.getElementById(
+      "editarProfissional"
+    )?.value;
+
+  const servicoSelect =
+    document.getElementById(
+      "editarServico"
+    );
+
+  const data =
+    document.getElementById(
+      "editarData"
+    )?.value;
+
+  if(
+    !caixa ||
+    !profissional ||
+    !servicoSelect?.value ||
+    !data
+  ){
+    return;
+  }
+
+  editarHoraSelecionada = "";
+
+  caixa.innerHTML = `
+    <div class="editarHorarioMensagem">
+      Carregando horários...
+    </div>
+  `;
+
+  try{
+
+    const respostaProfissional =
+      await fetch(
+        `/profissionais/${profissional}`
+      );
+
+    if(!respostaProfissional.ok){
+      throw new Error(
+        "Não foi possível carregar o profissional."
+      );
+    }
+
+    const profissionalDados =
+      await respostaProfissional.json();
+
+    const respostaAgenda =
+      await fetch(`/agenda/${data}`);
+
+    if(!respostaAgenda.ok){
+      throw new Error(
+        "Não foi possível carregar a agenda."
+      );
+    }
+
+    const agenda =
+      await respostaAgenda.json();
+
+    const duracao =
+      Number(
+        servicoSelect
+          .selectedOptions[0]
+          ?.dataset.duracao || 30
+      );
+
+    const horarios =
+      gerarHorariosEdicao(
+        profissionalDados.hora_inicio,
+        profissionalDados.hora_fim,
+        duracao
+      );
+
+    const livres =
+      horarios.filter(hora=>{
+
+        const inicioNovo =
+          horaParaMinutos(hora);
+
+        const fimNovo =
+          inicioNovo + duracao;
+
+        const conflito =
+          agenda.some(a=>{
+
+            // Ignora o próprio agendamento editado
+            if(
+              Number(a.id) ===
+              Number(agendamentoSelecionado.id)
+            ){
+              return false;
+            }
+
+            if(
+              Number(a.profissional_id) !==
+              Number(profissional)
+            ){
+              return false;
+            }
+
+            const inicioExistente =
+              horaParaMinutos(a.hora);
+
+            const fimExistente =
+              inicioExistente +
+              Number(
+                a.servico_duracao || 30
+              );
+
+            return (
+              inicioNovo < fimExistente &&
+              fimNovo > inicioExistente
+            );
+
+          });
+
+        return !conflito;
+
+      });
+
+    if(!livres.length){
+
+      caixa.innerHTML = `
+        <div class="editarHorarioMensagem">
+          Nenhum horário disponível para esta combinação.
+        </div>
+      `;
+
+      return;
+
+    }
+
+    const horarioAtualDisponivel =
+      livres.includes(
+        agendamentoSelecionado.hora
+      );
+
+    editarHoraSelecionada =
+      horarioAtualDisponivel
+        ? agendamentoSelecionado.hora
+        : livres[0];
+
+    caixa.innerHTML =
+      livres.map(hora=>`
+
+        <button
+          type="button"
+          class="editarHoraOpcao ${
+            hora === editarHoraSelecionada
+              ? "selecionado"
+              : ""
+          }"
+          onclick="selecionarHoraEdicao(
+            '${hora}',
+            this
+          )">
+
+          ${hora}
+
+        </button>
+
+      `).join("");
+
+  }catch(erro){
+
+    console.error(
+      "Erro ao carregar horários da edição:",
+      erro
+    );
+
+    caixa.innerHTML = `
+      <div class="editarHorarioMensagem erro">
+        Não foi possível carregar os horários.
+      </div>
+    `;
+
+  }
+
+}
+
+function gerarHorariosEdicao(
+  inicio,
+  fim,
+  duracao
+){
+
+  const horarios = [];
+
+  let atual =
+    horaParaMinutos(inicio);
+
+  const limite =
+    horaParaMinutos(fim);
+
+  while(atual + duracao <= limite){
+
+    horarios.push(
+      minutosParaHora(atual)
+    );
+
+    atual += duracao;
+
+  }
+
+  return horarios;
+
+}
+
+function selecionarHoraEdicao(
+  hora,
+  botao
+){
+
+  editarHoraSelecionada = hora;
+
+  document
+    .querySelectorAll(".editarHoraOpcao")
+    .forEach(item=>
+      item.classList.remove("selecionado")
+    );
+
+  botao.classList.add("selecionado");
+
 }
